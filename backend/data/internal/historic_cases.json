@@ -1,0 +1,132 @@
+[
+  {
+    "id": "INT-HIST-001",
+    "symptom": "Leakage",
+    "description": "Oil leakage from valve seat during pressure test on assembly line",
+    "rootCause": "O-ring groove undersize after CNC finish pass",
+    "whyWhy": [
+      "Leak at seat interface",
+      "Compression set insufficient",
+      "Groove diameter below print",
+      "Tool offset drift not caught in FAI"
+    ],
+    "fishbone": {
+      "Man": "Operator skipped groove OD check at FAI",
+      "Machine": "CNC tool offset drifted after insert change",
+      "Method": "No in-process groove measurement step",
+      "Material": "O-ring compression set insufficient for groove size",
+      "Measurement": "FAI checklist missing groove OD characteristic",
+      "Environment": "Shift handover did not flag last tool change"
+    },
+    "sixM": {
+      "Man": "Training gap on groove critical dimension",
+      "Machine": "CNC compensation not locked after setup",
+      "Method": "Control plan missing groove OD SPC",
+      "Material": "Seal supplier batch within spec but marginal for undersize groove",
+      "Measurement": "No go/no-go for groove diameter",
+      "MotherNature": "No environmental contribution identified"
+    },
+    "kepnerTregoe": {
+      "problem": "Oil leak at valve seat on pressure test",
+      "is": "Leak at seat interface after CNC finish; Shift B lots",
+      "isNot": "Not body casting porosity; not supplier seal mix-up",
+      "distinction": "Appears after tool offset change without FAI",
+      "mostProbable": "Groove undersize from unlocked CNC offset"
+    },
+    "correctiveAction": "Reset CNC offset, quarantine lot, 100% pressure retest",
+    "preventiveAction": "Add groove OD check to in-process SPC; update control plan",
+    "images": [
+      { "path": "INT-HIST-001/defect-1.svg", "name": "Valve seat leak" },
+      { "path": "INT-HIST-001/defect-2.svg", "name": "Pressure test bay" },
+      { "path": "INT-HIST-001/defect-3.svg", "name": "Groove OD check" }
+    ]
+  },
+  {
+    "id": "INT-HIST-002",
+    "symptom": "Dimensional",
+    "description": "Shaft OD out of tolerance after turning — repeated on shift B",
+    "rootCause": "Worn insert + missing first-piece verification",
+    "whyWhy": [
+      "OD oversized",
+      "Insert wear",
+      "No mid-shift tool change rule",
+      "FAI skipped on tool change"
+    ],
+    "fishbone": {
+      "Man": "Operator skipped first-piece after insert change",
+      "Machine": "Insert worn beyond tool life",
+      "Method": "No mid-shift tool change rule",
+      "Material": "Bar stock hardness variation within print",
+      "Measurement": "First-piece verification not enforced",
+      "Environment": "Shift B handover incomplete"
+    },
+    "sixM": null,
+    "kepnerTregoe": null,
+    "correctiveAction": "Replace insert, rework salvageable parts, retrain operator",
+    "preventiveAction": "Tool-life counter alarm; mandatory FAI after insert change"
+  },
+  {
+    "id": "INT-HIST-003",
+    "symptom": "Crack",
+    "description": "Hairline crack near weld zone on bracket after vibration test",
+    "rootCause": "Incomplete weld penetration at joint",
+    "whyWhy": [
+      "Crack after vibration",
+      "Stress concentration at weld toe",
+      "Low penetration",
+      "Weld parameter drift"
+    ],
+    "fishbone": null,
+    "sixM": {
+      "Man": "Welder used non-qualified parameter set",
+      "Machine": "Welder amp readout drifted",
+      "Method": "WPS not locked on cell HMI",
+      "Material": "Bracket fit-up gap above WPS max",
+      "Measurement": "No penetration check on first piece",
+      "MotherNature": "Draft affecting shield gas coverage"
+    },
+    "kepnerTregoe": null,
+    "correctiveAction": "Re-weld with qualified WPS; NDT sample lot",
+    "preventiveAction": "Lock weld parameters; weekly WPS audit"
+  },
+  {
+    "id": "INT-HIST-004",
+    "symptom": "Surface Finish",
+    "description": "Paint scratches on housing after paint line transfer",
+    "rootCause": "Contaminated hangers contacting wet paint",
+    "whyWhy": [
+      "Scratch marks",
+      "Contact during transfer",
+      "Dirty hangers",
+      "No hanger clean cycle"
+    ],
+    "fishbone": null,
+    "sixM": null,
+    "kepnerTregoe": null,
+    "correctiveAction": "Isolate lot, touch-up / rework, clean hangers",
+    "preventiveAction": "Daily hanger clean checklist"
+  },
+  {
+    "id": "INT-HIST-005",
+    "symptom": "Porosity",
+    "description": "Casting porosity rejected at in-house machining",
+    "rootCause": "Gas entrapment from moisture in mold sand",
+    "whyWhy": [
+      "Porosity after machine",
+      "Gas pockets",
+      "Moisture in sand",
+      "Dryer cycle missed"
+    ],
+    "fishbone": null,
+    "sixM": null,
+    "kepnerTregoe": {
+      "problem": "Casting porosity found at machining",
+      "is": "Gas pockets after dryer cycle missed; sand batch B",
+      "isNot": "Not machining chatter marks; not supplier casting",
+      "distinction": "Only lots poured after skipped dryer interlock",
+      "mostProbable": "Moisture in mold sand causing gas entrapment"
+    },
+    "correctiveAction": "Scrap porous lots; dry sand batch; machine remaining OK pieces",
+    "preventiveAction": "Moisture SPC on sand; dryer interlock"
+  }
+]
