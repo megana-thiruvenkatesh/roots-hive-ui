@@ -44,24 +44,24 @@ const ICONS = {
   ),
   complaints: (
     <Icon>
-      {/* Gear (left) + AI network (right) */}
-      <path d="M10.5 4.5v1.6c-.7.2-1.3.5-1.8.9l-1.1-1.1-1.4 1.4 1.1 1.1c-.4.5-.7 1.1-.9 1.8H4.8v2h1.6c.2.7.5 1.3.9 1.8l-1.1 1.1 1.4 1.4 1.1-1.1c.5.4 1.1.7 1.8.9v1.6h1.2" />
-      <circle cx="12" cy="12" r="3.4" />
-      <path d="M15.4 9.5h1.5" />
-      <path d="M15.4 14.5h1.5" />
-      <circle cx="15.4" cy="9.5" r="0.75" fill="currentColor" stroke="none" />
-      <circle cx="15.4" cy="14.5" r="0.75" fill="currentColor" stroke="none" />
-      <circle cx="18.3" cy="7.2" r="1.1" fill="currentColor" stroke="none" />
-      <circle cx="20.4" cy="10.1" r="1.1" fill="currentColor" stroke="none" />
-      <circle cx="20.8" cy="13.9" r="1.1" fill="currentColor" stroke="none" />
-      <circle cx="18.3" cy="16.8" r="1.1" fill="currentColor" stroke="none" />
-      <circle cx="21.6" cy="12" r="1.1" fill="currentColor" stroke="none" />
-      <path d="M16.9 9.3 18.3 7.2" />
-      <path d="M16.9 9.7 20.4 10.1" />
-      <path d="M16.9 14.3 20.8 13.9" />
-      <path d="M16.9 14.7 18.3 16.8" />
-      <path d="M20.4 10.1 21.6 12" />
-      <path d="M20.8 13.9 21.6 12" />
+      {/* Clipboard */}
+      <rect x="4.5" y="5" width="11.5" height="15" rx="1.6" />
+      <path d="M8.2 5V3.8h4.1V5" />
+      {/* Checklist rows */}
+      <circle cx="7.4" cy="9.2" r="1.1" />
+      <path d="M6.9 9.2l0.7 0.7 1.2-1.3" />
+      <path d="M9.8 8.7h4.2M9.8 9.8h3.2" />
+      <circle cx="7.4" cy="12.8" r="1.1" />
+      <path d="M6.9 12.8l0.7 0.7 1.2-1.3" />
+      <path d="M9.8 12.3h4.2M9.8 13.4h3.2" />
+      <circle cx="7.4" cy="16.4" r="1.1" />
+      <path d="M6.9 16.4l0.7 0.7 1.2-1.3" />
+      <path d="M9.8 15.9h4.2M9.8 17h3.2" />
+      {/* Gear with alert */}
+      <circle cx="17.2" cy="16.8" r="3.2" />
+      <path d="M17.2 12.8v1.1M17.2 19.7v1.1M13.8 14.6l.8.8M19.8 18.2l.8.8M12.8 16.8h1.1M20.5 16.8h1.1M13.8 19l.8-.8M19.8 15.4l.8-.8" />
+      <path d="M17.2 15v2.2" />
+      <circle cx="17.2" cy="18.4" r="0.55" fill="currentColor" stroke="none" />
     </Icon>
   ),
   config: (

@@ -164,19 +164,19 @@ export function HistoricPopupProvider({ children }) {
                 {maximized ? (
                   <button type="button" onClick={() => restoreSide(activeWindow.key)} title="Back to side preview">
                     <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-                      <path d="M9 9 4 4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M7 4H4v3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M15 15l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M17 20h3v-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M15 9 20 4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M17 4h3v3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M9 15 4 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M7 20H4v-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                 ) : (
                   <button type="button" onClick={() => maximize(activeWindow.key)} title="Maximize center preview">
                     <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-                      <path d="M4 4l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M9 4H4v5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M20 20l-5-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M15 20h5v-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M20 4l-5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M15 4h5v5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M4 20l5-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M9 20H4v-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                 )}

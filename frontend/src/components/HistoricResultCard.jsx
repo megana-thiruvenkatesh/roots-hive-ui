@@ -22,22 +22,22 @@ function similarityTone(score) {
 }
 
 function DiagonalExpandIcon({ open }) {
-  /* collapsed → expand (arrows out); expanded → collapse (arrows in) */
+  /* Expand = arrows out (NE / SW); Collapse = arrows in */
   return (
     <svg className="hist-expand-icon" viewBox="0 0 24 24" aria-hidden="true">
       {open ? (
         <>
-          <path d="M10 10 5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M8.5 5H5v3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M14 14l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M15.5 19H19v-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M19 5 14 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M14 5h5v5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M5 19 10 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M10 19H5v-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </>
       ) : (
         <>
-          <path d="M5 5l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M10 5H5v5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M19 19l-5-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M14 19h5v-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M14 10 19 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M15.5 5H19v3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M10 14 5 19" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M8.5 19H5v-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </>
       )}
     </svg>
@@ -203,26 +203,28 @@ export function HistoricRecordFace({ view, rank, expanded, onToggle, selected, o
           {view.issueDate && view.issueDate !== '—' ? (
             <span className="hist-date-badge">{view.issueDate}</span>
           ) : null}
+        </div>
+        <div className="hist-case-end">
           <div className="hist-confidence">
             <strong>{view.overall}%</strong>
             <span className="hist-confidence-caption">overall match</span>
             <span className={`hist-match-label ${view.matchTone}`}>{view.matchLabel}</span>
           </div>
+          {onToggle ? (
+            <button
+              type="button"
+              className="hist-expand-arrow"
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggle();
+              }}
+              title={expanded ? 'Collapse' : 'Expand'}
+              aria-label={expanded ? 'Collapse details' : 'Expand details'}
+            >
+              <DiagonalExpandIcon open={expanded} />
+            </button>
+          ) : null}
         </div>
-        {onToggle ? (
-          <button
-            type="button"
-            className="hist-expand-arrow"
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggle();
-            }}
-            title={expanded ? 'Collapse' : 'Expand'}
-            aria-label={expanded ? 'Collapse details' : 'Expand details'}
-          >
-            <DiagonalExpandIcon open={expanded} />
-          </button>
-        ) : null}
       </div>
       <div className="hist-case-bar" />
       <p className="hist-case-problem">{view.problem}</p>

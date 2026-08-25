@@ -3487,31 +3487,140 @@ html[data-theme='dark'] .side-link.active { color: #2a8f6f; }
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(230px, 1.05fr) minmax(280px, 1.7fr) minmax(240px, 1.25fr);
+  grid-template-columns: minmax(240px, 1.15fr) minmax(300px, 1.8fr) minmax(240px, 1.15fr);
   grid-template-rows: minmax(0, 1fr);
   gap: 16px;
   align-items: stretch;
   transition: grid-template-columns 0.28s ease;
 }
 .new-complaint-row.nc-focus-details {
-  grid-template-columns: minmax(280px, 1.85fr) minmax(220px, 1.15fr) minmax(200px, 1fr);
+  grid-template-columns: minmax(260px, 1.35fr) minmax(280px, 1.85fr) minmax(200px, 0.9fr);
 }
 .new-complaint-row.nc-focus-historic {
-  grid-template-columns: minmax(200px, 0.95fr) minmax(300px, 2.1fr) minmax(200px, 1fr);
+  grid-template-columns: minmax(200px, 0.9fr) minmax(340px, 2.2fr) minmax(200px, 0.9fr);
 }
 .new-complaint-row.nc-focus-ai {
-  grid-template-columns: minmax(200px, 0.95fr) minmax(220px, 1.15fr) minmax(280px, 1.95fr);
+  grid-template-columns: minmax(200px, 0.9fr) minmax(280px, 1.85fr) minmax(260px, 1.35fr);
 }
 .new-complaint-row > .result-card-section {
   min-width: 0;
   transition: transform 0.28s ease, box-shadow 0.28s ease;
+  position: relative;
 }
-.new-complaint-row > .result-card-section.is-locked > .nc-card,
-.new-complaint-row > .result-card-section.is-locked > .card {
+.new-complaint-row > .result-card-section.is-hovered > .nc-card,
+.new-complaint-row > .result-card-section.is-hovered > .card {
   box-shadow: 0 0 0 2px rgba(23, 107, 82, 0.35);
 }
+.new-complaint-row > .result-card-section.is-collapsed {
+  gap: 0;
+}
+.outside-card-title-text {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+.nc-pane-toggle {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #176b52;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: none;
+  line-height: 0;
+}
+.nc-pane-toggle:hover {
+  background: transparent;
+  color: #10271f;
+}
+.nc-pane-toggle-in {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+}
+.nc-pane-card {
+  position: relative;
+  padding-top: 10px;
+  padding-right: 28px;
+}
+.nc-details-card.nc-pane-card {
+  padding-top: 0;
+  padding-right: 0;
+}
+.nc-details-card.nc-pane-card .nc-wizard-stage {
+  padding: 36px 34px 0 14px;
+}
+/* Keep Historic search bar clear of the in-card collapse arrow */
+.nc-pane-card > .hist-find-wrap {
+  width: calc(100% - 22px);
+  max-width: calc(100% - 22px);
+  margin-right: 22px;
+  box-sizing: border-box;
+}
+.nc-pane-card > .muted,
+.nc-pane-card > .hist-find-wrap,
+.nc-pane-card > .hist-stack,
+.nc-pane-card > .empty-panel,
+.nc-pane-card > .ai-guide {
+  position: relative;
+  z-index: 1;
+}
+.nc-pane-rail {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  border: 1px solid #c9d6d0;
+  border-radius: 12px;
+  background: #fff;
+  color: #176b52;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 4px;
+  box-shadow: 0 1px 2px rgba(16, 39, 31, 0.06);
+}
+.nc-pane-rail:hover {
+  background: #eff8f4;
+  border-color: #176b52;
+}
+.nc-pane-rail-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  max-height: calc(100% - 40px);
+  overflow: hidden;
+}
+.nc-pane-rail-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: transparent;
+  flex-shrink: 0;
+  color: #176b52;
+  border: 0;
+}
 .nc-results-field {
-  max-width: 220px;
+  min-width: 0;
 }
 .nc-details-card {
   padding: 0;
@@ -3677,6 +3786,8 @@ html[data-theme='dark'] .side-link.active { color: #2a8f6f; }
 .nc-details-card .field,
 .hist-case-fields .field {
   margin-bottom: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 .nc-details-card .field label,
 .nc-details-card .nc-source-field-head label,
@@ -3688,6 +3799,9 @@ html[data-theme='dark'] .side-link.active { color: #2a8f6f; }
   text-transform: none;
   color: #17212b;
   margin: 12px 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .nc-details-card .nc-source-field-head {
   margin-bottom: 10px;
@@ -3737,6 +3851,8 @@ html[data-theme='dark'] .side-link.active { color: #2a8f6f; }
 .hist-case-fields select.input {
   height: 38px;
   min-height: 38px;
+  min-width: 0;
+  max-width: 100%;
 }
 .nc-details-card textarea.input,
 .hist-case-fields textarea.input {
@@ -3840,6 +3956,13 @@ form.nc-card {
   white-space: nowrap;
   flex-shrink: 0;
 }
+.hist-case-end {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
 .hist-confidence-wrap {
   display: flex;
   align-items: center;
@@ -3851,9 +3974,8 @@ form.nc-card {
   align-items: center;
   gap: 6px;
   flex-wrap: nowrap;
-  text-align: left;
+  text-align: right;
   min-width: 0;
-  margin-left: 4px;
   flex-shrink: 0;
 }
 .hist-confidence strong {
@@ -3965,13 +4087,18 @@ form.nc-card {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .hist-meta-item strong {
   display: block;
   margin-top: 2px;
   font-size: 11px;
   color: #17212b;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .hist-signals-title {
   color: #647180;

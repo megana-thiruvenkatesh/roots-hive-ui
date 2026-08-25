@@ -38,6 +38,36 @@ const FLOW_STEPS = [
   { n: 4, label: 'Approval sent' },
 ];
 
+const PANE_KEYS = ['details', 'historic', 'ai'];
+
+function PaneChevron({ collapsed, side = 'end' }) {
+  /* Simple caret chevron — left when open (collapse), right when collapsed (expand) */
+  const pointsRight = collapsed || side === 'start';
+  return (
+    <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+      <path
+        d={pointsRight ? 'M6 3.2 11 8 6 12.8' : 'M10 3.2 5 8 10 12.8'}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function buildPaneGrid(collapsed, focus) {
+  // Default: sides a bit wider than strict 25/50/25
+  const weights = { details: 1.15, historic: 1.8, ai: 1.15 };
+  if (focus === 'details') Object.assign(weights, { details: 1.4, historic: 1.7, ai: 1 });
+  if (focus === 'historic') Object.assign(weights, { details: 1, historic: 2.1, ai: 1 });
+  if (focus === 'ai') Object.assign(weights, { details: 1, historic: 1.7, ai: 1.4 });
+  return PANE_KEYS.map((key) =>
+    collapsed[key] ? '44px' : `minmax(160px, ${weights[key]}fr)`
+  ).join(' ');
+}
+
 function NcFlowTrack({ step, onSelect }) {
   return (
     <ol className="nc-flow-track" aria-label="Complaint flow">
@@ -143,11 +173,35 @@ export default function NewComplaint() {
   const [matching, setMatching] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
   const [selectedGrounding, setSelectedGrounding] = useState(null);
-  const [focusCard, setFocusCard] = useState('details');
-  const [lockedCard, setLockedCard] = useState('details');
+  const [hoveredPane, setHoveredPane] = useState(null);
+  const [collapsedPanes, setCollapsedPanes] = useState({
+    details: false,
+    historic: false,
+    ai: false,
+  });
   const historicFilter = useHistoricRecordsFilter(matches);
   const resultsToShow = clampResultsToShow(form.resultsToShow);
   const shownHistoric = historicFilter.shownMatches.slice(0, resultsToShow);
+
+  function togglePane(key) {
+    setCollapsedPanes((prev) => {
+      const nextCollapsed = !prev[key];
+      const openCount = PANE_KEYS.filter((k) => !prev[k]).length;
+      if (nextCollapsed && openCount <= 1) return prev;
+      const next = { ...prev, [key]: nextCollapsed };
+      if (nextCollapsed && hoveredPane === key) setHoveredPane(null);
+      return next;
+    });
+  }
+
+  function onPaneEnter(key) {
+    if (collapsedPanes[key]) return;
+    setHoveredPane(key);
+  }
+
+  function onPaneLeave(key) {
+    setHoveredPane((h) => (h === key ? null : h));
+  }
 
   const debouncedDesc = useDebounced(form.desc, 450);
   const debouncedCat = useDebounced(form.defectCat, 450);
@@ -513,20 +567,45 @@ export default function NewComplaint() {
       ) : null}
 
       <div
-        className={`new-complaint-row nc-focus-${focusCard}`}
-        onMouseLeave={() => setFocusCard(lockedCard)}
+        className={`new-complaint-row${hoveredPane ? ` nc-focus-${hoveredPane}` : ''}`}
+        style={{ gridTemplateColumns: buildPaneGrid(collapsedPanes, hoveredPane) }}
       >
         <section
-          className={`result-card-section${lockedCard === 'details' ? ' is-locked' : ''}`}
-          onMouseEnter={() => setFocusCard('details')}
-          onFocusCapture={() => setFocusCard('details')}
-          onClick={() => {
-            setLockedCard('details');
-            setFocusCard('details');
-          }}
+          className={`result-card-section${hoveredPane === 'details' ? ' is-hovered' : ''}${collapsedPanes.details ? ' is-collapsed' : ''}`}
+          onMouseEnter={() => onPaneEnter('details')}
+          onMouseLeave={() => onPaneLeave('details')}
         >
-          <div className="outside-card-title">{stepTitle}</div>
-          <form className="card nc-card nc-details-card" onSubmit={onDetailsSubmit}>
+          {collapsedPanes.details ? (
+            <button
+              type="button"
+              className="nc-pane-rail"
+              title="Expand Complaint Details"
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePane('details');
+              }}
+            >
+              <span className="nc-pane-rail-label">{stepTitle}</span>
+              <span className="nc-pane-rail-arrow"><PaneChevron collapsed /></span>
+            </button>
+          ) : (
+            <>
+              <div className="outside-card-title">
+                <span className="outside-card-title-text">{stepTitle}</span>
+              </div>
+              <form className="card nc-card nc-details-card nc-pane-card" onSubmit={onDetailsSubmit}>
+                <button
+                  type="button"
+                  className="nc-pane-toggle nc-pane-toggle-in"
+                  title="Collapse panel"
+                  aria-label="Collapse Complaint Details"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    togglePane('details');
+                  }}
+                >
+                  <PaneChevron collapsed={false} />
+                </button>
             <div className="nc-wizard-stage">
               <div
                 key={step}
@@ -595,7 +674,7 @@ export default function NewComplaint() {
                       </div>
                     )}
 
-                    <div className="form-grid-2 nc-form-fields">
+                    <div className="form-grid-3 nc-form-fields">
                       <div className="field">
                         <label>Lot Quantity</label>
                         <input className="input" type="number" min="0" value={form.lotQty} onChange={(e) => upd('lotQty', e.target.value)} />
@@ -604,18 +683,18 @@ export default function NewComplaint() {
                         <label>Defect Quantity</label>
                         <input className="input" type="number" min="0" value={form.defectQty} onChange={(e) => upd('defectQty', e.target.value)} />
                       </div>
-                    </div>
-
-                    <div className="field nc-results-field">
-                      <label>Results to show</label>
-                      <input
-                        className="input"
-                        type="number"
-                        min="1"
-                        max="20"
-                        value={form.resultsToShow}
-                        onChange={(e) => upd('resultsToShow', e.target.value)}
-                      />
+                      <div className="field nc-results-field">
+                        <label>Results to show</label>
+                        <input
+                          className="input"
+                          type="number"
+                          min="1"
+                          max="20"
+                          value={form.resultsToShow}
+                          title={`Will display ${clampResultsToShow(form.resultsToShow)} of ${matches.length || 0} matched record${matches.length === 1 ? '' : 's'}`}
+                          onChange={(e) => upd('resultsToShow', e.target.value)}
+                        />
+                      </div>
                     </div>
                   </>
                 ) : null}
@@ -740,24 +819,51 @@ export default function NewComplaint() {
               </div>
             </div>
           </form>
+            </>
+          )}
         </section>
 
         <section
-          className={`result-card-section${lockedCard === 'historic' ? ' is-locked' : ''}`}
-          onMouseEnter={() => setFocusCard('historic')}
-          onFocusCapture={() => setFocusCard('historic')}
-          onClick={() => {
-            setLockedCard('historic');
-            setFocusCard('historic');
-          }}
+          className={`result-card-section${hoveredPane === 'historic' ? ' is-hovered' : ''}${collapsedPanes.historic ? ' is-collapsed' : ''}`}
+          onMouseEnter={() => onPaneEnter('historic')}
+          onMouseLeave={() => onPaneLeave('historic')}
         >
+          {collapsedPanes.historic ? (
+            <button
+              type="button"
+              className="nc-pane-rail"
+              title="Expand Historic Records"
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePane('historic');
+              }}
+            >
+              <span className="nc-pane-rail-label">Historic Records</span>
+              <span className="nc-pane-rail-arrow"><PaneChevron collapsed /></span>
+            </button>
+          ) : (
+            <>
           <div className="outside-card-title">
-            Historic Records
-            <span className="muted" style={{ fontWeight: 600, marginLeft: 8 }}>
-              ({form.type || 'source'} · {shownHistoric.length} shown / {matches.length} total)
+            <span className="outside-card-title-text">
+              Historic Records
+              <span className="muted" style={{ fontWeight: 600, marginLeft: 8 }}>
+                ({form.type || 'source'} · {shownHistoric.length} shown / {matches.length} total)
+              </span>
             </span>
           </div>
-          <div className="card nc-card">
+          <div className="card nc-card nc-pane-card">
+            <button
+              type="button"
+              className="nc-pane-toggle nc-pane-toggle-in"
+              title="Collapse panel"
+              aria-label="Collapse Historic Records"
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePane('historic');
+              }}
+            >
+              <PaneChevron collapsed={false} />
+            </button>
             {!matches.length ? (
               <p className="muted" style={{ margin: 0 }}>
                 {form.desc.trim().length < 8
@@ -792,19 +898,46 @@ export default function NewComplaint() {
               </>
             )}
           </div>
+            </>
+          )}
         </section>
 
         <section
-          className={`result-card-section${lockedCard === 'ai' ? ' is-locked' : ''}`}
-          onMouseEnter={() => setFocusCard('ai')}
-          onFocusCapture={() => setFocusCard('ai')}
-          onClick={() => {
-            setLockedCard('ai');
-            setFocusCard('ai');
-          }}
+          className={`result-card-section${hoveredPane === 'ai' ? ' is-hovered' : ''}${collapsedPanes.ai ? ' is-collapsed' : ''}`}
+          onMouseEnter={() => onPaneEnter('ai')}
+          onMouseLeave={() => onPaneLeave('ai')}
         >
-          <div className="outside-card-title">AI Suggested Solution</div>
-          <div className="card nc-card nc-ai-card">
+          {collapsedPanes.ai ? (
+            <button
+              type="button"
+              className="nc-pane-rail"
+              title="Expand AI Suggested Solution"
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePane('ai');
+              }}
+            >
+              <span className="nc-pane-rail-label">AI Suggested Solution</span>
+              <span className="nc-pane-rail-arrow"><PaneChevron collapsed /></span>
+            </button>
+          ) : (
+            <>
+          <div className="outside-card-title">
+            <span className="outside-card-title-text">AI Suggested Solution</span>
+          </div>
+          <div className="card nc-card nc-ai-card nc-pane-card">
+            <button
+              type="button"
+              className="nc-pane-toggle nc-pane-toggle-in"
+              title="Collapse panel"
+              aria-label="Collapse AI Suggested Solution"
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePane('ai');
+              }}
+            >
+              <PaneChevron collapsed={false} />
+            </button>
             <AiGuidedSolution
               form={form}
               grounding={selectedGrounding}
@@ -814,6 +947,8 @@ export default function NewComplaint() {
               onApplyToForm={applyGuidedToForm}
             />
           </div>
+            </>
+          )}
         </section>
       </div>
     </div>
