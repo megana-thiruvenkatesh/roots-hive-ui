@@ -6,14 +6,6 @@ Stack: **React (Vite) + Express + PostgreSQL**.
 
 ---
 
-## Repository name
-
-Recommended: **`hive-roots`**
-
-Alternatives: `hive-roots-poc`, `hive-ai-roots`
-
----
-
 ## What it has
 
 | Area | Description |
