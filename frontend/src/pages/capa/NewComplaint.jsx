@@ -143,6 +143,8 @@ export default function NewComplaint() {
   const [matching, setMatching] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
   const [selectedGrounding, setSelectedGrounding] = useState(null);
+  const [focusCard, setFocusCard] = useState('details');
+  const [lockedCard, setLockedCard] = useState('details');
   const historicFilter = useHistoricRecordsFilter(matches);
   const resultsToShow = clampResultsToShow(form.resultsToShow);
   const shownHistoric = historicFilter.shownMatches.slice(0, resultsToShow);
@@ -489,8 +491,12 @@ export default function NewComplaint() {
 
   return (
     <div className="new-complaint-page">
-      <div className="page-head">
+      <div className="page-head nc-page-head-row">
         <h1>{resendMode ? `Update & resend · ${draftId || ''}` : 'New Complaint'}</h1>
+        <NcFlowTrack
+          step={trackStep}
+          onSelect={step < 4 && !approvalSent ? (n) => goToStep(n, n < step ? 'back' : 'forward') : undefined}
+        />
       </div>
 
       {toastMsg ? (
@@ -506,13 +512,19 @@ export default function NewComplaint() {
         </div>
       ) : null}
 
-      <NcFlowTrack
-        step={trackStep}
-        onSelect={step < 4 && !approvalSent ? (n) => goToStep(n, n < step ? 'back' : 'forward') : undefined}
-      />
-
-      <div className="new-complaint-row">
-        <section className="result-card-section">
+      <div
+        className={`new-complaint-row nc-focus-${focusCard}`}
+        onMouseLeave={() => setFocusCard(lockedCard)}
+      >
+        <section
+          className={`result-card-section${lockedCard === 'details' ? ' is-locked' : ''}`}
+          onMouseEnter={() => setFocusCard('details')}
+          onFocusCapture={() => setFocusCard('details')}
+          onClick={() => {
+            setLockedCard('details');
+            setFocusCard('details');
+          }}
+        >
           <div className="outside-card-title">{stepTitle}</div>
           <form className="card nc-card nc-details-card" onSubmit={onDetailsSubmit}>
             <div className="nc-wizard-stage">
@@ -537,9 +549,9 @@ export default function NewComplaint() {
                           {severityOptions.map((s) => <option key={s}>{s}</option>)}
                         </select>
                       </div>
-                      <div className="field">
+                      <div className="field nc-date-field">
                         <label>Date of Issue</label>
-                        <input className="input" type="date" value={form.complaintDate} onChange={(e) => upd('complaintDate', e.target.value)} required />
+                        <input className="input nc-date-input" type="date" value={form.complaintDate} onChange={(e) => upd('complaintDate', e.target.value)} required />
                       </div>
                     </div>
 
@@ -559,20 +571,31 @@ export default function NewComplaint() {
                       <textarea className="input" rows={3} value={form.desc} onChange={(e) => upd('desc', e.target.value)} placeholder="Describe the defect..." required />
                     </div>
 
-                    <div className="field">
-                      <label>Defect Category</label>
-                      <select className="input" value={form.defectCat} onChange={(e) => upd('defectCat', e.target.value)}>
-                        <option value="">(none selected)</option>
-                        {defectOptionsList.map((d) => <option key={d}>{d}</option>)}
-                      </select>
-                    </div>
+                    {form.type === 'Supplier' ? (
+                      <div className="form-grid-2 nc-form-fields">
+                        <div className="field">
+                          <label>Defect Category</label>
+                          <select className="input" value={form.defectCat} onChange={(e) => upd('defectCat', e.target.value)}>
+                            <option value="">(none selected)</option>
+                            {defectOptionsList.map((d) => <option key={d}>{d}</option>)}
+                          </select>
+                        </div>
+                        <div className="field">
+                          <label>Customer / Supplier Code</label>
+                          <input className="input" value={form.customer} onChange={(e) => upd('customer', e.target.value)} placeholder="type to search..." />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="field">
+                        <label>Defect Category</label>
+                        <select className="input" value={form.defectCat} onChange={(e) => upd('defectCat', e.target.value)}>
+                          <option value="">(none selected)</option>
+                          {defectOptionsList.map((d) => <option key={d}>{d}</option>)}
+                        </select>
+                      </div>
+                    )}
 
-                    <div className="field">
-                      <label>Customer / Supplier Code</label>
-                      <input className="input" value={form.customer} onChange={(e) => upd('customer', e.target.value)} placeholder="type to search..." />
-                    </div>
-
-                    <div className="form-grid-3 nc-form-fields">
+                    <div className="form-grid-2 nc-form-fields">
                       <div className="field">
                         <label>Lot Quantity</label>
                         <input className="input" type="number" min="0" value={form.lotQty} onChange={(e) => upd('lotQty', e.target.value)} />
@@ -581,17 +604,18 @@ export default function NewComplaint() {
                         <label>Defect Quantity</label>
                         <input className="input" type="number" min="0" value={form.defectQty} onChange={(e) => upd('defectQty', e.target.value)} />
                       </div>
-                      <div className="field">
-                        <label>Results to show</label>
-                        <input
-                          className="input"
-                          type="number"
-                          min="1"
-                          max="20"
-                          value={form.resultsToShow}
-                          onChange={(e) => upd('resultsToShow', e.target.value)}
-                        />
-                      </div>
+                    </div>
+
+                    <div className="field nc-results-field">
+                      <label>Results to show</label>
+                      <input
+                        className="input"
+                        type="number"
+                        min="1"
+                        max="20"
+                        value={form.resultsToShow}
+                        onChange={(e) => upd('resultsToShow', e.target.value)}
+                      />
                     </div>
                   </>
                 ) : null}
@@ -718,7 +742,15 @@ export default function NewComplaint() {
           </form>
         </section>
 
-        <section className="result-card-section">
+        <section
+          className={`result-card-section${lockedCard === 'historic' ? ' is-locked' : ''}`}
+          onMouseEnter={() => setFocusCard('historic')}
+          onFocusCapture={() => setFocusCard('historic')}
+          onClick={() => {
+            setLockedCard('historic');
+            setFocusCard('historic');
+          }}
+        >
           <div className="outside-card-title">
             Historic Records
             <span className="muted" style={{ fontWeight: 600, marginLeft: 8 }}>
@@ -762,7 +794,15 @@ export default function NewComplaint() {
           </div>
         </section>
 
-        <section className="result-card-section">
+        <section
+          className={`result-card-section${lockedCard === 'ai' ? ' is-locked' : ''}`}
+          onMouseEnter={() => setFocusCard('ai')}
+          onFocusCapture={() => setFocusCard('ai')}
+          onClick={() => {
+            setLockedCard('ai');
+            setFocusCard('ai');
+          }}
+        >
           <div className="outside-card-title">AI Suggested Solution</div>
           <div className="card nc-card nc-ai-card">
             <AiGuidedSolution

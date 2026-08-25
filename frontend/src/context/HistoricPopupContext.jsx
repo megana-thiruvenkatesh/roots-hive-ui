@@ -1,11 +1,17 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { HistoricAttributeGrid, HistoricRecordFace, ResultMeta } from '../components/HistoricResultCard.jsx';
 import { buildHistoricCaseView } from '../lib/historicChunkAttributes.js';
 import { renderAnalysisSections } from '../lib/analysisMethods';
 
 const HistoricPopupContext = createContext();
 
-function PopupDetails({ item }) {
+function headerOffset() {
+  const header = document.querySelector('.top-header');
+  if (header) return Math.round(header.getBoundingClientRect().bottom + 10);
+  return 68;
+}
+
+function PopupDetails({ item, expandAll }) {
   if (item.kind === 'ai') {
     const analysisSections = item.analysisMethod
       ? renderAnalysisSections(item, item.analysisMethod)
@@ -45,7 +51,7 @@ function PopupDetails({ item }) {
       <div className="hist-card hist-case-card hist-popup-record">
         <HistoricRecordFace view={view} />
       </div>
-      <HistoricAttributeGrid item={item} />
+      <HistoricAttributeGrid item={item} expandAll={expandAll} />
     </div>
   );
 }
@@ -53,40 +59,67 @@ function PopupDetails({ item }) {
 export function HistoricPopupProvider({ children }) {
   const [windows, setWindows] = useState([]);
   const [activeKey, setActiveKey] = useState(null);
-  const [popupTop, setPopupTop] = useState(98);
+  const [popupTop, setPopupTop] = useState(68);
 
   const keyFor = (item) => item.popupKey || `${item.source || item.kind || 'result'}-${item.id}`;
 
+  useEffect(() => {
+    function syncTop() {
+      setPopupTop(headerOffset());
+    }
+    syncTop();
+    window.addEventListener('resize', syncTop);
+    return () => window.removeEventListener('resize', syncTop);
+  }, []);
+
   function openPopup(item) {
     const key = keyFor(item);
-    const cardRow = document.querySelector('.engine-assist-row, .new-complaint-row');
-    if (cardRow) setPopupTop(Math.max(12, Math.round(cardRow.getBoundingClientRect().top + 28)));
+    setPopupTop(headerOffset());
     setWindows((current) => {
       const exists = current.some((entry) => entry.key === key);
       const minimizedOthers = current.map((entry) => (
         entry.key === key
-          ? { ...entry, item, minimized: false }
-          : { ...entry, minimized: true }
+          ? { ...entry, item, minimized: false, maximized: false }
+          : { ...entry, minimized: true, maximized: false }
       ));
       return exists
         ? minimizedOthers
-        : [...minimizedOthers, { key, item, minimized: false }];
+        : [...minimizedOthers, { key, item, minimized: false, maximized: false }];
     });
     setActiveKey(key);
   }
 
   function minimize(key) {
     setWindows((current) => current.map((entry) => (
-      entry.key === key ? { ...entry, minimized: true } : entry
+      entry.key === key ? { ...entry, minimized: true, maximized: false } : entry
     )));
     setActiveKey(null);
   }
 
   function restore(key) {
+    setPopupTop(headerOffset());
     setWindows((current) => current.map((entry) => (
       entry.key === key
-        ? { ...entry, minimized: false }
-        : { ...entry, minimized: true }
+        ? { ...entry, minimized: false, maximized: false }
+        : { ...entry, minimized: true, maximized: false }
+    )));
+    setActiveKey(key);
+  }
+
+  function maximize(key) {
+    setPopupTop(headerOffset());
+    setWindows((current) => current.map((entry) => (
+      entry.key === key
+        ? { ...entry, minimized: false, maximized: true }
+        : entry
+    )));
+    setActiveKey(key);
+  }
+
+  function restoreSide(key) {
+    setPopupTop(headerOffset());
+    setWindows((current) => current.map((entry) => (
+      entry.key === key ? { ...entry, minimized: false, maximized: false } : entry
     )));
     setActiveKey(key);
   }
@@ -98,28 +131,62 @@ export function HistoricPopupProvider({ children }) {
 
   const activeWindow = windows.find((entry) => entry.key === activeKey && !entry.minimized);
   const minimizedWindows = windows.filter((entry) => entry.minimized);
+  const maximized = Boolean(activeWindow?.maximized);
 
   return (
-    <HistoricPopupContext.Provider value={{ openPopup, minimize, restore, close }}>
+    <HistoricPopupContext.Provider value={{ openPopup, minimize, restore, maximize, restoreSide, close }}>
       {children}
       {activeWindow ? (
-        <div
-          className="historic-popup-container"
-          style={{
-            top: popupTop,
-            height: `calc(100vh - ${popupTop + 28}px)`,
-            maxHeight: `calc(100vh - ${popupTop + 28}px)`,
-          }}
-        >
-          <div className="historic-popup-header">
-            <span>{activeWindow.item.kind === 'ai' ? 'AI' : 'Historic'} · {activeWindow.item.id}</span>
-            <div className="historic-popup-actions">
-              <button type="button" onClick={() => minimize(activeWindow.key)} title="Minimize">—</button>
-              <button type="button" onClick={() => close(activeWindow.key)} title="Close">×</button>
+        <>
+          {maximized ? (
+            <button
+              type="button"
+              className="historic-popup-backdrop"
+              aria-label="Close maximized preview"
+              onClick={() => restoreSide(activeWindow.key)}
+            />
+          ) : null}
+          <div
+            className={`historic-popup-container${maximized ? ' maximized' : ''}`}
+            style={
+              maximized
+                ? undefined
+                : {
+                    top: popupTop,
+                    height: `calc(100vh - ${popupTop + 16}px)`,
+                    maxHeight: `calc(100vh - ${popupTop + 16}px)`,
+                  }
+            }
+          >
+            <div className="historic-popup-header">
+              <span>{activeWindow.item.kind === 'ai' ? 'AI' : 'Historic'} · {activeWindow.item.id}</span>
+              <div className="historic-popup-actions">
+                {maximized ? (
+                  <button type="button" onClick={() => restoreSide(activeWindow.key)} title="Back to side preview">
+                    <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                      <path d="M9 9 4 4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M7 4H4v3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M15 15l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M17 20h3v-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button type="button" onClick={() => maximize(activeWindow.key)} title="Maximize center preview">
+                    <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                      <path d="M4 4l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M9 4H4v5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M20 20l-5-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M15 20h5v-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                )}
+                <button type="button" onClick={() => minimize(activeWindow.key)} title="Minimize">—</button>
+                <button type="button" onClick={() => close(activeWindow.key)} title="Close">×</button>
+              </div>
             </div>
+            <PopupDetails item={activeWindow.item} expandAll />
           </div>
-          <PopupDetails item={activeWindow.item} />
-        </div>
+        </>
       ) : null}
       {minimizedWindows.length ? (
         <div className="historic-popup-dock">
@@ -132,9 +199,9 @@ export function HistoricPopupProvider({ children }) {
                 <button
                   type="button"
                   className="historic-popup-chip-maximize"
-                  title={`Maximize ${entry.item.id}`}
+                  title={`Restore ${entry.item.id}`}
                   onClick={() => restore(entry.key)}
-                  aria-label={`Maximize ${entry.item.id}`}
+                  aria-label={`Restore ${entry.item.id}`}
                 >
                   <svg className="historic-popup-maximize-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path

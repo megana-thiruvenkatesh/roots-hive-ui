@@ -36,24 +36,75 @@ export function MicrosoftLogo() {
   );
 }
 
-export function AuthBrand() {
-  return null;
+export function EyeIcon({ open = true }) {
+  if (open) {
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M2.5 12S6.5 5.5 12 5.5 21.5 12 21.5 12 17.5 18.5 12 18.5 2.5 12 2.5 12Z"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+        <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3 3l18 18M10.6 10.7a2.8 2.8 0 003.7 3.7M9.4 5.6A9.5 9.5 0 0112 5.5C17.5 5.5 21.5 12 21.5 12a16 16 0 01-3.2 3.9M6.2 6.3A16 16 0 002.5 12S6.5 18.5 12 18.5c1.2 0 2.3-.2 3.3-.6"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function AuthBrand({ subtitle }) {
+  return (
+    <div className="hive-login-brand auth-brand">
+      <img src="/logo.png" alt="Hive AI" className="hive-login-logo" />
+      <strong className="hive-login-title">Hive AI</strong>
+      {subtitle ? <p className="sfw-welcome auth-brand-sub">{subtitle}</p> : null}
+    </div>
+  );
 }
 
 export function AuthCard({ children }) {
   return <div className="sso-login-card">{children}</div>;
 }
 
-export function SsoButtons({ providers, disabled, onMicrosoftLocal }) {
+export function AuthPoweredBy() {
+  return (
+    <div className="sfw-foot auth-powered">
+      <span className="sso-powered-by">Powered by SFW Technologies India Pvt Ltd</span>
+    </div>
+  );
+}
+
+export function SsoButtons({ providers, disabled, onMicrosoftLocal, layout = 'stack', labels = 'full' }) {
   const googleOn = Boolean(providers.google);
   const microsoftOn = Boolean(providers.microsoft);
   const msLocal = providers.microsoftMode === 'local';
+  const short = labels === 'short';
 
   return (
-    <div className="sso-full-stack">
+    <div className={layout === 'row' ? 'sso-pair-row' : 'sso-full-stack'}>
       <button
         type="button"
-        className="sso-full-btn"
+        className={layout === 'row' ? 'sso-pair-btn' : 'sso-full-btn'}
+        disabled={disabled || !googleOn}
+        onClick={() => {
+          window.location.href = `${API_BASE}/auth/google`;
+        }}
+      >
+        <GoogleLogo />
+        <span>{short ? 'Google' : 'Login with Google'}</span>
+      </button>
+      <button
+        type="button"
+        className={layout === 'row' ? 'sso-pair-btn' : 'sso-full-btn'}
         disabled={disabled || !microsoftOn}
         onClick={() => {
           if (msLocal) {
@@ -64,18 +115,7 @@ export function SsoButtons({ providers, disabled, onMicrosoftLocal }) {
         }}
       >
         <MicrosoftLogo />
-        <span>Login with Microsoft</span>
-      </button>
-      <button
-        type="button"
-        className="sso-full-btn"
-        disabled={disabled || !googleOn}
-        onClick={() => {
-          window.location.href = `${API_BASE}/auth/google`;
-        }}
-      >
-        <GoogleLogo />
-        <span>Login with Google</span>
+        <span>{short ? 'Microsoft' : 'Login with Microsoft'}</span>
       </button>
     </div>
   );

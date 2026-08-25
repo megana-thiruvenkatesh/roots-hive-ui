@@ -47,8 +47,42 @@ function getStaticMfaCode() {
   return STATIC_MFA_CODE;
 }
 
-async function registerLocalUser() {
-  throw new Error('Registration is disabled. Ask Admin to create an account.');
+async function registerLocalUser({ name, email, password, company, phone, profileDetails }) {
+  const cleanName = String(name || '').trim();
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  const cleanPassword = String(password || '');
+  if (!cleanName) throw new Error('Full name is required');
+  if (!cleanEmail || !cleanEmail.includes('@')) throw new Error('Valid email is required');
+  if (cleanPassword.length < 6) throw new Error('Password must be at least 6 characters');
+
+  const { rows: existing } = await pool.query(`SELECT id FROM users WHERE email = $1 LIMIT 1`, [
+    cleanEmail,
+  ]);
+  if (existing[0]) throw new Error('An account with this email already exists');
+
+  const passwordHash = await bcrypt.hash(cleanPassword, 10);
+  const details = {
+    ...(profileDetails && typeof profileDetails === 'object' ? profileDetails : {}),
+    company: String(company || '').trim() || null,
+    phone: String(phone || '').trim() || null,
+  };
+
+  const { rows } = await pool.query(
+    `INSERT INTO users (
+       name, email, password_hash, dept, role_key, role_label, is_admin, auth_provider, profile_details
+     ) VALUES ($1, $2, $3, $4, $5, $6, FALSE, 'local', $7::jsonb)
+     RETURNING *`,
+    [
+      cleanName,
+      cleanEmail,
+      passwordHash,
+      'Quality',
+      'QUALITY_EMPLOYEE',
+      'Quality Employee',
+      JSON.stringify(details),
+    ]
+  );
+  return rows[0];
 }
 
 async function loginLocalUser({ email, password }) {

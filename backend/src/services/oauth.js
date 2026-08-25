@@ -61,7 +61,7 @@ function microsoftAuthUrl(state, codeChallenge) {
     redirect_uri: callbackUrl,
     response_type: 'code',
     response_mode: 'query',
-    scope: 'openid profile email User.Read',
+    scope: 'openid profile email',
     prompt: 'select_account',
     state,
   });
@@ -125,7 +125,7 @@ async function exchangeMicrosoftCode(code, codeVerifier) {
     client_id: clientId,
     redirect_uri: callbackUrl,
     grant_type: 'authorization_code',
-    scope: 'openid profile email User.Read',
+    scope: 'openid profile email',
   });
   if (clientSecret) body.set('client_secret', clientSecret);
   if (codeVerifier) body.set('code_verifier', codeVerifier);

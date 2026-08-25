@@ -29,48 +29,46 @@
 
 ---
 
-## 2) Microsoft / Outlook — local POC (default, no Azure needed)
+## 2) Microsoft / Outlook — local POC (only if no Client ID)
 
-If `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET` are empty and `MICROSOFT_DEV_LOGIN=true` (default):
+If `MICROSOFT_CLIENT_ID` is empty and `MICROSOFT_DEV_LOGIN=true`:
 
-1. Click **Continue with Microsoft / Outlook**
-2. Enter Outlook / Microsoft email (+ optional name)
-3. Complete MFA (`123456`)
+1. Click **Microsoft**
+2. Enter Outlook / Microsoft email manually
+3. App creates/opens the session
 
-No Azure portal access required. Suitable for local demos.
+Use this only for demos without Azure access.
 
 ---
 
-## 2b) Real Microsoft Entra ID OAuth (optional)
+## 2b) Real Microsoft auto-login (recommended)
 
-When you have Azure access, set both client values in `.env` — the app switches to real Microsoft login automatically (`microsoftMode: oauth`).
+When `MICROSOFT_CLIENT_ID` + `MICROSOFT_CLIENT_SECRET` are set:
 
+1. User clicks **Microsoft**
+2. Browser opens **login.microsoftonline.com** (pick / sign in to Microsoft account)
+3. Microsoft redirects back → user is logged in automatically (no email typing)
+
+### Azure setup
 1. Go to [Azure Portal → App registrations](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
-2. **New registration**
-   - Name: `HIVE Roots`
-   - Supported account types: **Accounts in any organizational directory and personal Microsoft accounts**  
-     (covers work/school + personal Outlook / Hotmail / Live)
-   - Redirect URI platform: **Web**
+2. Open your app (or **New registration**)
+   - Supported account types: org + personal if you need both (`MICROSOFT_TENANT_ID=common`)
+   - Or work/school only (`MICROSOFT_TENANT_ID=organizations`)
+3. **Authentication → Add a platform → Web**
    - Redirect URI: `http://localhost:4000/api/auth/microsoft/callback`  
      (must match `MICROSOFT_CALLBACK_URL` exactly)
-3. **Certificates & secrets → New client secret** → copy the **Value** immediately
-4. **Overview** → copy **Application (client) ID**
-5. **API permissions**
-   - Microsoft Graph → Delegated: `openid`, `profile`, `email`, `User.Read`
-   - Click **Grant admin consent** if your tenant requires it
-6. **Authentication** (optional but recommended)
-   - Under Implicit grant: leave access/ID tokens unchecked (we use auth code)
-   - Ensure the Web redirect URI above is listed
+4. **Certificates & secrets → New client secret** → copy the **Value** immediately
+5. **Overview** → copy **Application (client) ID**
+6. **API permissions** → Microsoft Graph delegated: `openid`, `profile`, `email`, `User.Read`
 7. Put in `backend/.env`:
    ```
    MICROSOFT_CLIENT_ID=<Application (client) ID>
    MICROSOFT_CLIENT_SECRET=<client secret value>
-   MICROSOFT_TENANT_ID=common
+   MICROSOFT_TENANT_ID=organizations
    MICROSOFT_CALLBACK_URL=http://localhost:4000/api/auth/microsoft/callback
+   MICROSOFT_DEV_LOGIN=false
    ```
-   Use `MICROSOFT_TENANT_ID=<your-tenant-guid>` instead of `common` if you want **only** your org accounts.
-
-8. Restart the backend. Login/Register should show **Continue with Microsoft / Outlook** enabled.
+8. Restart the backend, then click **Microsoft** on the login page.
 
 ---
 

@@ -21,6 +21,44 @@ function similarityTone(score) {
   return 'high';
 }
 
+function DiagonalExpandIcon({ open }) {
+  /* collapsed → expand (arrows out); expanded → collapse (arrows in) */
+  return (
+    <svg className="hist-expand-icon" viewBox="0 0 24 24" aria-hidden="true">
+      {open ? (
+        <>
+          <path d="M10 10 5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M8.5 5H5v3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M14 14l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M15.5 19H19v-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </>
+      ) : (
+        <>
+          <path d="M5 5l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M10 5H5v5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M19 19l-5-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M14 19h5v-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+function SectionArrowIcon({ open }) {
+  return (
+    <svg className="hist-section-arrow" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d={open ? 'M6 14l6-6 6 6' : 'M8 6l6 6-6 6'}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function ResultMeta({ date, score }) {
   const tone = similarityTone(score);
   return (
@@ -52,8 +90,8 @@ export function useResultInteraction(item, toggleExpanded) {
   return { onClick, onDoubleClick };
 }
 
-function ExpandableSection({ title, date, showDate, wide, children }) {
-  const [open, setOpen] = useState(false);
+function ExpandableSection({ title, date, showDate, wide, defaultOpen = false, children }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <article className={`hist-section-card${wide ? ' full' : ''}${open ? ' open' : ''}`}>
       <button
@@ -67,7 +105,9 @@ function ExpandableSection({ title, date, showDate, wide, children }) {
       >
         <span className="hist-section-title">{title}</span>
         {showDate && date ? <span className="hist-section-date">{date}</span> : null}
-        <span className="hist-section-chevron">{open ? '▾' : '▸'}</span>
+        <span className="hist-section-toggle" aria-hidden="true">
+          <SectionArrowIcon open={open} />
+        </span>
       </button>
       {open ? <div className="hist-section-body">{children}</div> : null}
     </article>
@@ -129,18 +169,19 @@ function SectionBody({ section }) {
   );
 }
 
-export function HistoricAttributeGrid({ item }) {
+export function HistoricAttributeGrid({ item, expandAll = false }) {
   const view = buildHistoricCaseView(item);
   return (
     <div className="hist-expanded-content">
       <div className="hist-section-grid">
         {view.sections.map((section) => (
           <ExpandableSection
-            key={section.key}
+            key={`${section.key}-${expandAll ? 'open' : 'shut'}`}
             title={section.title}
             date={section.date}
             showDate={section.showDate}
             wide={section.wide}
+            defaultOpen={expandAll}
           >
             <SectionBody section={section} />
           </ExpandableSection>
@@ -162,28 +203,26 @@ export function HistoricRecordFace({ view, rank, expanded, onToggle, selected, o
           {view.issueDate && view.issueDate !== '—' ? (
             <span className="hist-date-badge">{view.issueDate}</span>
           ) : null}
-        </div>
-        <div className="hist-confidence-wrap">
           <div className="hist-confidence">
             <strong>{view.overall}%</strong>
-            <span>overall match</span>
+            <span className="hist-confidence-caption">overall match</span>
             <span className={`hist-match-label ${view.matchTone}`}>{view.matchLabel}</span>
           </div>
-          {onToggle ? (
-            <button
-              type="button"
-              className="hist-expand-arrow"
-              onClick={(event) => {
-                event.stopPropagation();
-                onToggle();
-              }}
-              title={expanded ? 'Collapse' : 'Expand'}
-              aria-label={expanded ? 'Collapse details' : 'Expand details'}
-            >
-              {expanded ? '▾' : '▸'}
-            </button>
-          ) : null}
         </div>
+        {onToggle ? (
+          <button
+            type="button"
+            className="hist-expand-arrow"
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggle();
+            }}
+            title={expanded ? 'Collapse' : 'Expand'}
+            aria-label={expanded ? 'Collapse details' : 'Expand details'}
+          >
+            <DiagonalExpandIcon open={expanded} />
+          </button>
+        ) : null}
       </div>
       <div className="hist-case-bar" />
       <p className="hist-case-problem">{view.problem}</p>
@@ -258,7 +297,7 @@ export default function HistoricResultCard({ item, expanded, onToggle, analysisM
       className={`hist-card hist-case-card ${expanded ? 'open' : ''}`}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
-      title="Click to expand; double-click to open"
+      title="Click to expand; double-click for side preview"
     >
       <HistoricRecordFace
         view={view}
@@ -272,7 +311,7 @@ export default function HistoricResultCard({ item, expanded, onToggle, analysisM
       />
       {expanded ? (
         <div className="hist-body" onClick={(event) => event.stopPropagation()}>
-          <HistoricAttributeGrid item={item} />
+          <HistoricAttributeGrid item={item} expandAll />
         </div>
       ) : null}
       {expanded && onSelectReference ? (

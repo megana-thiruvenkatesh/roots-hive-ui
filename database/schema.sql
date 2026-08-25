@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
   provider_subject VARCHAR(255),
   avatar_url       TEXT,
   last_login_at    TIMESTAMPTZ,
+  profile_details  JSONB NOT NULL DEFAULT '{}'::jsonb,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );

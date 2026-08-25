@@ -44,17 +44,37 @@ const ICONS = {
   ),
   complaints: (
     <Icon>
-      <ellipse cx="12" cy="5" rx="7" ry="3" />
-      <path d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5" />
-      <path d="M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
+      {/* Gear (left) + AI network (right) */}
+      <path d="M10.5 4.5v1.6c-.7.2-1.3.5-1.8.9l-1.1-1.1-1.4 1.4 1.1 1.1c-.4.5-.7 1.1-.9 1.8H4.8v2h1.6c.2.7.5 1.3.9 1.8l-1.1 1.1 1.4 1.4 1.1-1.1c.5.4 1.1.7 1.8.9v1.6h1.2" />
+      <circle cx="12" cy="12" r="3.4" />
+      <path d="M15.4 9.5h1.5" />
+      <path d="M15.4 14.5h1.5" />
+      <circle cx="15.4" cy="9.5" r="0.75" fill="currentColor" stroke="none" />
+      <circle cx="15.4" cy="14.5" r="0.75" fill="currentColor" stroke="none" />
+      <circle cx="18.3" cy="7.2" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="20.4" cy="10.1" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="20.8" cy="13.9" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="18.3" cy="16.8" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="21.6" cy="12" r="1.1" fill="currentColor" stroke="none" />
+      <path d="M16.9 9.3 18.3 7.2" />
+      <path d="M16.9 9.7 20.4 10.1" />
+      <path d="M16.9 14.3 20.8 13.9" />
+      <path d="M16.9 14.7 18.3 16.8" />
+      <path d="M20.4 10.1 21.6 12" />
+      <path d="M20.8 13.9 21.6 12" />
     </Icon>
   ),
   config: (
     <Icon>
-      <path d="M4 20V10" />
-      <path d="M10 20V4" />
-      <path d="M16 20v-7" />
-      <path d="M22 20H2" />
+      <path d="M4 7h10" />
+      <path d="M18 7h2" />
+      <circle cx="16" cy="7" r="2" />
+      <path d="M4 12h2" />
+      <path d="M10 12h10" />
+      <circle cx="8" cy="12" r="2" />
+      <path d="M4 17h10" />
+      <path d="M18 17h2" />
+      <circle cx="16" cy="17" r="2" />
     </Icon>
   ),
   settings: (
@@ -114,8 +134,6 @@ const NAV = [
         children: [
           { to: '/settings/profile', label: 'My Profile' },
           { to: '/settings/appearance', label: 'Appearance' },
-          { to: '/settings/behavior', label: 'AI Behavior' },
-          { to: '/settings/regional', label: 'Regional & Locale' },
         ],
       },
       {

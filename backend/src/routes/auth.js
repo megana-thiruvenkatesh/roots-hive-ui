@@ -27,26 +27,27 @@ const router = express.Router();
 const pkceByState = new Map();
 
 function microsoftOAuthConfigured() {
-  return Boolean(
-    String(process.env.MICROSOFT_CLIENT_ID || '').trim() &&
-      String(process.env.MICROSOFT_CLIENT_SECRET || '').trim()
-  );
+  return Boolean(String(process.env.MICROSOFT_CLIENT_ID || '').trim());
 }
 
-/** Local Microsoft login when Azure app secret is not available (demo / tenant policy). */
+function microsoftSecretConfigured() {
+  return Boolean(String(process.env.MICROSOFT_CLIENT_SECRET || '').trim());
+}
+
+/** Manual Microsoft email login when MICROSOFT_DEV_LOGIN=true (skips Azure redirect). */
 function microsoftLocalEnabled() {
-  if (microsoftOAuthConfigured()) return false;
-  const flag = String(process.env.MICROSOFT_DEV_LOGIN || 'true').toLowerCase();
-  return flag !== 'false' && flag !== '0';
+  const flag = String(process.env.MICROSOFT_DEV_LOGIN || 'false').toLowerCase();
+  return flag === 'true' || flag === '1';
 }
 
 function oauthReady() {
-  const msOauth = microsoftOAuthConfigured();
   const msLocal = microsoftLocalEnabled();
+  const msOauth = !msLocal && microsoftOAuthConfigured();
   return {
     google: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
     microsoft: msOauth || msLocal,
-    microsoftMode: msOauth ? 'oauth' : msLocal ? 'local' : 'off',
+    microsoftMode: msLocal ? 'local' : msOauth ? 'oauth' : 'off',
+    microsoftSecret: microsoftSecretConfigured(),
   };
 }
 
@@ -86,8 +87,18 @@ router.get('/providers', (_req, res) => {
   });
 });
 
-router.post('/register', (_req, res) => {
-  res.status(410).json({ error: 'Registration is disabled' });
+router.post('/register', async (req, res) => {
+  try {
+    const user = await registerLocalUser(req.body || {});
+    res.status(201).json({
+      message: 'Account created. Complete MFA to continue.',
+      ...mfaPayload(user),
+    });
+  } catch (e) {
+    console.error(e);
+    const status = /already exists/i.test(e.message || '') ? 409 : 400;
+    res.status(status).json({ error: e.message || 'Registration failed' });
+  }
 });
 
 router.post('/login', async (req, res) => {
@@ -128,15 +139,22 @@ router.get('/google/callback', async (req, res) => {
 router.get('/microsoft', (req, res) => {
   const page = req.query.from === 'register' ? 'register' : 'login';
   try {
+    if (microsoftLocalEnabled()) {
+      const url = new URL(`/${page}`, frontendUrl());
+      url.searchParams.set('step', 'microsoft');
+      return res.redirect(url.toString());
+    }
     if (!microsoftOAuthConfigured()) {
-      if (microsoftLocalEnabled()) {
-        const url = new URL(`/${page}`, frontendUrl());
-        url.searchParams.set('step', 'microsoft');
-        return res.redirect(url.toString());
-      }
       return redirectAuthError(
         res,
-        'Microsoft login is not configured. Add MICROSOFT_CLIENT_ID / SECRET, or set MICROSOFT_DEV_LOGIN=true for demo email login.',
+        'Microsoft login is not configured. Add MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET in backend/.env, or set MICROSOFT_DEV_LOGIN=true for manual email login.',
+        page
+      );
+    }
+    if (!microsoftSecretConfigured()) {
+      return redirectAuthError(
+        res,
+        'Microsoft Client ID is set, but MICROSOFT_CLIENT_SECRET is missing. In Azure Portal → App registrations → your app → Certificates & secrets → New client secret, paste the Value into backend/.env, then restart the backend.',
         page
       );
     }
@@ -222,14 +240,22 @@ router.post('/mfa/verify', async (req, res) => {
 });
 
 router.get('/me', requireAuth, async (req, res) => {
+  try {
+    await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_details JSONB NOT NULL DEFAULT '{}'::jsonb`);
+  } catch {
+    /* ignore */
+  }
   const { rows } = await pool.query(
     `SELECT id, name, email, dept, role_key, role_label, is_admin, auth_provider, avatar_url,
-            employee_id AS "employeeId", bio, contact, preferred_shift AS "preferredShift", clearance
+            employee_id AS "employeeId", bio, contact, preferred_shift AS "preferredShift", clearance,
+            COALESCE(profile_details, '{}'::jsonb) AS "profileDetails",
+            last_login_at AS "lastLoginAt"
      FROM users WHERE id = $1`,
     [req.user.id]
   );
   if (!rows[0]) return res.status(404).json({ error: 'User not found' });
-  
+
+  const details = rows[0].profileDetails || {};
   const userObj = {
     ...publicUser(rows[0]),
     employeeId: rows[0].employeeId,
@@ -237,26 +263,71 @@ router.get('/me', requireAuth, async (req, res) => {
     contact: rows[0].contact,
     preferredShift: rows[0].preferredShift,
     clearance: rows[0].clearance,
+    lastLoginAt: rows[0].lastLoginAt,
+    profile: details,
   };
   res.json({ user: userObj });
 });
 
 router.put('/profile', requireAuth, async (req, res) => {
   try {
-    const { name, bio, contact, preferredShift } = req.body || {};
+    await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_details JSONB NOT NULL DEFAULT '{}'::jsonb`);
+
+    const body = req.body || {};
+    const { name, bio, contact, preferredShift, avatarUrl, profile = {} } = body;
+
+    const profileDetails = {
+      firstName: String(profile.firstName || '').trim(),
+      lastName: String(profile.lastName || '').trim(),
+      displayName: String(profile.displayName || '').trim(),
+      gender: String(profile.gender || '').trim(),
+      dateOfBirth: String(profile.dateOfBirth || '').trim(),
+      phone: String(profile.phone || contact || '').trim(),
+      street: String(profile.street || '').trim(),
+      country: String(profile.country || '').trim(),
+      state: String(profile.state || '').trim(),
+      city: String(profile.city || '').trim(),
+      language: String(profile.language || 'English').trim(),
+      timezone: String(profile.timezone || '').trim(),
+    };
+
+    const display =
+      profileDetails.displayName ||
+      [profileDetails.firstName, profileDetails.lastName].filter(Boolean).join(' ') ||
+      name ||
+      null;
+    const phone = profileDetails.phone || contact || null;
+
+    if (avatarUrl != null && String(avatarUrl).length > 2_800_000) {
+      return res.status(400).json({ error: 'Avatar too large. Max size 2MB.' });
+    }
+
     const { rows } = await pool.query(
       `UPDATE users
        SET name = COALESCE($1, name),
            bio = COALESCE($2, bio),
            contact = COALESCE($3, contact),
            preferred_shift = COALESCE($4, preferred_shift),
+           avatar_url = COALESCE($5, avatar_url),
+           profile_details = $6::jsonb,
            updated_at = now()
-       WHERE id = $5
-       RETURNING id, name, email, dept, role_key, role_label, is_admin,
-                 employee_id AS "employeeId", bio, contact, preferred_shift AS "preferredShift", clearance`,
-      [name, bio, contact, preferredShift, req.user.id]
+       WHERE id = $7
+       RETURNING id, name, email, dept, role_key, role_label, is_admin, avatar_url,
+                 employee_id AS "employeeId", bio, contact, preferred_shift AS "preferredShift", clearance,
+                 COALESCE(profile_details, '{}'::jsonb) AS "profileDetails",
+                 last_login_at AS "lastLoginAt"`,
+      [
+        display,
+        bio ?? null,
+        phone,
+        preferredShift ?? null,
+        avatarUrl === undefined ? null : avatarUrl,
+        JSON.stringify(profileDetails),
+        req.user.id,
+      ]
     );
 
+    const details = rows[0].profileDetails || {};
     const userObj = {
       ...publicUser(rows[0]),
       employeeId: rows[0].employeeId,
@@ -264,11 +335,13 @@ router.put('/profile', requireAuth, async (req, res) => {
       contact: rows[0].contact,
       preferredShift: rows[0].preferredShift,
       clearance: rows[0].clearance,
+      lastLoginAt: rows[0].lastLoginAt,
+      profile: details,
     };
     res.json({ user: userObj });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: 'Failed to update profile' });
+    res.status(500).json({ error: e.message || 'Failed to update profile' });
   }
 });
 

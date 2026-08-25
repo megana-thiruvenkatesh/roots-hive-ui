@@ -20,8 +20,8 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  async function registerAccount({ name, email, password }) {
-    return api.post('/auth/register', { name, email, password });
+  async function registerAccount({ name, email, password, company, phone, profileDetails }) {
+    return api.post('/auth/register', { name, email, password, company, phone, profileDetails });
   }
 
   async function startPasswordLogin(email, password) {
@@ -52,11 +52,19 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  async function reloadUser() {
+    const data = await api.get('/auth/me');
+    setUser(data.user);
+    return data.user;
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
         loading,
+        setUser,
+        reloadUser,
         registerAccount,
         startPasswordLogin,
         completeMfaLogin,

@@ -1,191 +1,436 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext.jsx';
 
+const COUNTRIES = ['India', 'Singapore', 'United States', 'United Kingdom', 'Germany', 'Japan'];
+const STATES_BY_COUNTRY = {
+  India: ['Tamil Nadu', 'Karnataka', 'Maharashtra', 'Delhi', 'Gujarat', 'Telangana'],
+  Singapore: ['Central', 'East', 'North', 'North-East', 'West'],
+  'United States': ['California', 'Texas', 'New York', 'Illinois'],
+  'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
+  Germany: ['Bavaria', 'Berlin', 'Hamburg'],
+  Japan: ['Tokyo', 'Osaka', 'Kanagawa'],
+};
+const CITIES_BY_STATE = {
+  'Tamil Nadu': ['Coimbatore', 'Chennai', 'Madurai', 'Salem'],
+  Karnataka: ['Bengaluru', 'Mysuru'],
+  Maharashtra: ['Mumbai', 'Pune'],
+  Delhi: ['New Delhi'],
+  Gujarat: ['Ahmedabad', 'Surat'],
+  Telangana: ['Hyderabad'],
+  Central: ['Singapore'],
+  East: ['Singapore'],
+  North: ['Singapore'],
+  'North-East': ['Singapore'],
+  West: ['Singapore'],
+  California: ['San Francisco', 'Los Angeles'],
+  Texas: ['Austin', 'Dallas'],
+  'New York': ['New York City'],
+  Illinois: ['Chicago'],
+  England: ['London', 'Manchester'],
+  Scotland: ['Edinburgh'],
+  Wales: ['Cardiff'],
+  'Northern Ireland': ['Belfast'],
+  Bavaria: ['Munich'],
+  Berlin: ['Berlin'],
+  Hamburg: ['Hamburg'],
+  Tokyo: ['Tokyo'],
+  Osaka: ['Osaka'],
+  Kanagawa: ['Yokohama'],
+};
+const LANGUAGES = ['English', 'Tamil', 'Hindi', 'Japanese', 'German'];
+const TIMEZONES = [
+  'Asia/Kolkata (IST)',
+  'Asia/Singapore (SGT)',
+  'Asia/Tokyo (JST)',
+  'Europe/London (GMT)',
+  'America/New_York (EST)',
+];
+
+const EMPTY = {
+  firstName: '',
+  lastName: '',
+  displayName: '',
+  gender: '',
+  dateOfBirth: '',
+  phone: '',
+  street: '',
+  country: 'India',
+  state: '',
+  city: '',
+  language: 'English',
+  timezone: 'Asia/Kolkata (IST)',
+  bio: '',
+};
+
+function splitName(full) {
+  const parts = String(full || '').trim().split(/\s+/).filter(Boolean);
+  return {
+    firstName: parts[0] || '',
+    lastName: parts.slice(1).join(' ') || '',
+  };
+}
+
+function calcCompleteness(form, hasAvatar) {
+  const checks = [
+    form.firstName,
+    form.lastName,
+    form.displayName,
+    form.gender,
+    form.dateOfBirth,
+    form.phone,
+    form.street,
+    form.country,
+    form.state,
+    form.city,
+    form.language,
+    form.timezone,
+    form.bio,
+    hasAvatar,
+  ];
+  const filled = checks.filter((v) => String(v || '').trim()).length;
+  return Math.round((filled / checks.length) * 100);
+}
+
 export default function MyProfile() {
-  const { user, reloadUser } = useAuth();
-  
-  const [name, setName] = useState('');
-  const [bio, setBio] = useState('');
-  const [contact, setContact] = useState('');
-  const [shift, setShift] = useState('Morning (06:00 - 14:00)');
+  const { user, reloadUser, setUser } = useAuth();
+  const fileRef = useRef(null);
+
+  const [form, setForm] = useState(EMPTY);
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      setName(user.name || '');
-      setBio(user.bio || '');
-      setContact(user.contact || '');
-      setShift(user.preferredShift || 'Morning (06:00 - 14:00)');
-      setLoading(false);
-    }
+    if (!user) return;
+    const p = user.profile || {};
+    const split = splitName(user.name);
+    setForm({
+      firstName: p.firstName || split.firstName,
+      lastName: p.lastName || split.lastName,
+      displayName: p.displayName || user.name || '',
+      gender: p.gender || '',
+      dateOfBirth: p.dateOfBirth || '',
+      phone: p.phone || user.contact || '',
+      street: p.street || '',
+      country: p.country || 'India',
+      state: p.state || '',
+      city: p.city || '',
+      language: p.language || 'English',
+      timezone: p.timezone || 'Asia/Kolkata (IST)',
+      bio: user.bio || '',
+    });
+    setAvatarUrl(user.avatarUrl || null);
+    setDirty(false);
   }, [user]);
 
-  async function handleSave(e) {
-    if (e) e.preventDefault();
-    setError('');
-    setSuccess('');
-    try {
-      await api.put('/auth/profile', {
-        name,
-        bio,
-        contact,
-        preferredShift: shift,
-      });
-      await reloadUser();
-      setSuccess('Profile updated successfully.');
-      setTimeout(() => setSuccess(''), 3500);
-    } catch (err) {
-      setError(err.message || 'Failed to update profile');
-    }
-  }
+  const completeness = useMemo(
+    () => calcCompleteness(form, Boolean(avatarUrl)),
+    [form, avatarUrl]
+  );
 
-  if (loading) {
-    return <div className="muted">Loading profile…</div>;
-  }
+  const states = STATES_BY_COUNTRY[form.country] || [];
+  const cities = CITIES_BY_STATE[form.state] || [];
 
-  const initials = (user?.name || 'U')
+  const initials = (form.displayName || form.firstName || user?.name || 'U')
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((p) => p[0]?.toUpperCase())
     .join('');
 
+  function upd(key, value) {
+    setForm((prev) => {
+      const next = { ...prev, [key]: value };
+      if (key === 'country') {
+        next.state = '';
+        next.city = '';
+      }
+      if (key === 'state') next.city = '';
+      if (key === 'firstName' || key === 'lastName') {
+        if (!prev.displayName || prev.displayName === `${prev.firstName} ${prev.lastName}`.trim()) {
+          next.displayName = `${key === 'firstName' ? value : prev.firstName} ${key === 'lastName' ? value : prev.lastName}`.trim();
+        }
+      }
+      return next;
+    });
+    setDirty(true);
+    setSuccess('');
+  }
+
+  function onAvatarPick(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (!/^image\/(jpeg|png|gif|webp)$/i.test(file.type)) {
+      setError('Use JPG, PNG, GIF, or WEBP.');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setError('Avatar max size is 2MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatarUrl(String(reader.result || ''));
+      setDirty(true);
+      setError('');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function handleSave(e) {
+    e?.preventDefault?.();
+    setError('');
+    setSuccess('');
+    setSaving(true);
+    try {
+      const data = await api.put('/auth/profile', {
+        name: form.displayName || `${form.firstName} ${form.lastName}`.trim(),
+        bio: form.bio,
+        contact: form.phone,
+        avatarUrl: avatarUrl || null,
+        profile: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          displayName: form.displayName,
+          gender: form.gender,
+          dateOfBirth: form.dateOfBirth,
+          phone: form.phone,
+          street: form.street,
+          country: form.country,
+          state: form.state,
+          city: form.city,
+          language: form.language,
+          timezone: form.timezone,
+        },
+      });
+      if (data.user && setUser) setUser(data.user);
+      else await reloadUser();
+      setDirty(false);
+      setSuccess('Profile saved. Your updates are live for the team.');
+      window.setTimeout(() => setSuccess(''), 3500);
+    } catch (err) {
+      setError(err.message || 'Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!user) {
+    return <div className="muted">Loading profile…</div>;
+  }
+
+  const headerName = form.displayName || `${form.firstName} ${form.lastName}`.trim() || user.name;
+  const company = user.dept || 'HIVE Roots';
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <div>
-        <h3 style={{ margin: '0 0 4px 0', fontSize: 15 }}>My Profile</h3>
-        <p className="muted" style={{ margin: 0, fontSize: '0.85rem' }}>Personal information visible to teammates in Messaging.</p>
-      </div>
-
-      {success && <div style={{ color: 'var(--teal)', fontSize: '0.85rem', fontWeight: 'bold' }}>✓ {success}</div>}
-      {error && <div style={{ color: 'var(--red)', fontSize: '0.85rem', fontWeight: 'bold' }}>⚠️ {error}</div>}
-
-      {/* Avatar Summary card */}
-      <div className="card" style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '16px 20px', backgroundColor: 'rgba(255,255,255,0.01)' }}>
-        <div style={{
-          width: 54, height: 54, borderRadius: '50%', backgroundColor: 'var(--amber-soft)',
-          border: '2px solid var(--amber)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--amber)', position: 'relative'
-        }}>
-          {initials}
-          <span style={{
-            width: 14, height: 14, borderRadius: '50%', backgroundColor: '#10b981',
-            position: 'absolute', bottom: -2, right: -2, border: '2px solid var(--bg-card)'
-          }} />
-        </div>
+    <form className="profile-page" onSubmit={handleSave}>
+      <div className="profile-page-head">
         <div>
-          <h4 style={{ margin: 0, fontSize: '1.1rem' }}>{user?.name}</h4>
-          <div className="muted" style={{ fontSize: '0.85rem', marginTop: 2 }}>{user?.roleLabel} · {user?.dept}</div>
-          <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
-            <span className="badge" style={{ backgroundColor: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>{user?.dept?.toUpperCase()}</span>
-            <span className="badge" style={{ backgroundColor: 'rgba(244,63,94,0.1)', color: '#fb7185' }}>{user?.isAdmin ? 'ADMIN' : 'EMPLOYEE'}</span>
-            <span className="badge minor">ACTIVE</span>
-          </div>
+          <h3>My Profile</h3>
+          <p>Keep your details current so CAPA and approval flows show the right owner.</p>
         </div>
+        {dirty ? <span className="profile-dirty-pill">Unsaved changes</span> : null}
       </div>
 
-      {/* Profile Fields Form */}
-      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div className="field">
-            <label className="label">DISPLAY NAME</label>
-            <input
-              type="text"
-              className="input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="field">
-            <label className="label">EMPLOYEE ID</label>
-            <input
-              type="text"
-              className="input"
-              value={user?.employeeId || 'EMP-ROO001'}
-              disabled
-              style={{ opacity: 0.6 }}
-            />
-          </div>
-        </div>
+      {success ? <div className="profile-banner ok">✓ {success}</div> : null}
+      {error ? <div className="profile-banner err">⚠ {error}</div> : null}
 
-        <div className="field">
-          <label className="label">SHORT BIO / ROLE SUMMARY</label>
-          <textarea
-            className="input"
-            style={{ minHeight: 65 }}
-            placeholder="e.g. Senior engineer managing Line 2 & 3, specialising in compressor systems."
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div className="field">
-            <label className="label">CONTACT / EXTENSION</label>
-            <input
-              type="text"
-              className="input"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-            />
+      <section className="profile-hero card">
+        <div className="profile-hero-banner" />
+        <div className="profile-hero-body">
+          <div className="profile-avatar-wrap">
+            {avatarUrl ? (
+              <img className="profile-avatar-img" src={avatarUrl} alt="" />
+            ) : (
+              <div className="profile-avatar-fallback">{initials}</div>
+            )}
           </div>
-          <div className="field">
-            <label className="label">PREFERRED SHIFT</label>
-            <select
-              className="input"
-              style={{ backgroundColor: 'var(--bg-soft)' }}
-              value={shift}
-              onChange={(e) => setShift(e.target.value)}
-            >
-              <option value="Morning (06:00 - 14:00)">Morning (06:00 - 14:00)</option>
-              <option value="Afternoon (14:00 - 22:00)">Afternoon (14:00 - 22:00)</option>
-              <option value="Night (22:00 - 06:00)">Night (22:00 - 06:00)</option>
-              <option value="General Shift">General Shift</option>
-            </select>
+          <div className="profile-hero-meta">
+            <div className="profile-hero-title-row">
+              <h2>{headerName}</h2>
+              <span className="profile-pill role">{user.roleLabel || 'User'}</span>
+              <span className="profile-pill org">{company}</span>
+            </div>
+            <div className="profile-hero-contact">
+              <span>{user.email}</span>
+              {form.phone ? <span>· {form.phone}</span> : null}
+            </div>
+            <div className="profile-completeness">
+              <div className="profile-completeness-top">
+                <span>Profile completeness</span>
+                <strong>{completeness}%</strong>
+              </div>
+              <div className="profile-completeness-track">
+                <span style={{ width: `${completeness}%` }} />
+              </div>
+              <p>
+                {completeness >= 90
+                  ? 'Profile looks complete for team workflows.'
+                  : 'Complete your profile so teammates know who they are working with.'}
+              </p>
+            </div>
+          </div>
+          <div className="profile-avatar-actions">
+            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/gif,image/webp" hidden onChange={onAvatarPick} />
+            <button type="button" className="btn secondary profile-avatar-btn" onClick={() => fileRef.current?.click()}>
+              Change Avatar
+            </button>
+            <span className="muted">JPG, GIF or PNG. Max size 2MB.</span>
           </div>
         </div>
+      </section>
 
-        <div style={{ alignSelf: 'flex-start' }}>
-          <button type="submit" className="btn">
-            Save Profile
-          </button>
-        </div>
-      </form>
+      <div className="profile-grid">
+        <section className="profile-card card">
+          <header className="profile-card-head">
+            <span className="profile-card-icon personal" aria-hidden="true" />
+            <h4>Personal Information</h4>
+          </header>
+          <div className="profile-fields two">
+            <label className="field">
+              <span>First Name</span>
+              <input className="input" value={form.firstName} onChange={(e) => upd('firstName', e.target.value)} required />
+            </label>
+            <label className="field">
+              <span>Last Name</span>
+              <input className="input" value={form.lastName} onChange={(e) => upd('lastName', e.target.value)} />
+            </label>
+            <label className="field">
+              <span>Display Name</span>
+              <input className="input" value={form.displayName} onChange={(e) => upd('displayName', e.target.value)} />
+            </label>
+            <label className="field">
+              <span>Role</span>
+              <input className="input" value={user.roleLabel || ''} disabled />
+            </label>
+            <label className="field">
+              <span>Gender</span>
+              <select className="input" value={form.gender} onChange={(e) => upd('gender', e.target.value)}>
+                <option value="">Select</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </label>
+            <label className="field">
+              <span>Date of Birth</span>
+              <input className="input" type="date" value={form.dateOfBirth} onChange={(e) => upd('dateOfBirth', e.target.value)} />
+            </label>
+          </div>
+        </section>
 
-      {/* Account & Access Panel */}
-      <div className="card" style={{ marginTop: 10, padding: 18, border: '1px solid var(--border)' }}>
-        <h4 style={{ margin: '0 0 12px 0', fontSize: '0.95rem' }}>Account & Access</h4>
-        <p className="muted" style={{ margin: '0 0 14px 0', fontSize: '0.8rem' }}>Managed by your IT administrator</p>
-        
-        <table style={{ width: '100%', fontSize: '0.85rem', borderCollapse: 'collapse' }}>
-          <tbody>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <td style={{ padding: '8px 0', color: 'var(--text2)' }}>Department</td>
-              <td style={{ padding: '8px 0', textAlign: 'right', fontWeight: 'bold' }}>{user?.dept || 'IT Security'}</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <td style={{ padding: '8px 0', color: 'var(--text2)' }}>Access Level</td>
-              <td style={{ padding: '8px 0', textAlign: 'right', fontWeight: 'bold' }}>{user?.roleLabel || 'Administrator'}</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <td style={{ padding: '8px 0', color: 'var(--text2)' }}>Session Policy</td>
-              <td style={{ padding: '8px 0', textAlign: 'right', fontWeight: 'bold' }}>30 min auto-logout</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <td style={{ padding: '8px 0', color: 'var(--text2)' }}>MFA Status</td>
-              <td style={{ padding: '8px 0', textAlign: 'right', color: 'var(--teal)', fontWeight: 'bold' }}>✓ Enabled</td>
-            </tr>
-            <tr>
-              <td style={{ padding: '8px 0', color: 'var(--text2)' }}>Last Login</td>
-              <td style={{ padding: '8px 0', textAlign: 'right', fontWeight: 'bold' }}>Tue, 11 Aug, 2026 04:00 pm</td>
-            </tr>
-          </tbody>
-        </table>
+        <section className="profile-card card">
+          <header className="profile-card-head">
+            <span className="profile-card-icon contact" aria-hidden="true" />
+            <h4>Contact</h4>
+          </header>
+          <div className="profile-fields">
+            <label className="field">
+              <span>Email</span>
+              <input className="input" value={user.email || ''} disabled />
+              <em className="field-help">Your login email cannot be changed here.</em>
+            </label>
+            <label className="field">
+              <span>Phone</span>
+              <input className="input" value={form.phone} onChange={(e) => upd('phone', e.target.value)} placeholder="e.g. 9807567371" />
+            </label>
+          </div>
+        </section>
+
+        <section className="profile-card card">
+          <header className="profile-card-head">
+            <span className="profile-card-icon location" aria-hidden="true" />
+            <h4>Location</h4>
+          </header>
+          <div className="profile-fields">
+            <label className="field">
+              <span>Street Address</span>
+              <input className="input" value={form.street} onChange={(e) => upd('street', e.target.value)} placeholder="Street, area" />
+            </label>
+            <div className="profile-fields three">
+              <label className="field">
+                <span>Country</span>
+                <select className="input" value={form.country} onChange={(e) => upd('country', e.target.value)}>
+                  {COUNTRIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                <span>State</span>
+                <select className="input" value={form.state} onChange={(e) => upd('state', e.target.value)}>
+                  <option value="">Select</option>
+                  {states.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                <span>City</span>
+                <select className="input" value={form.city} onChange={(e) => upd('city', e.target.value)}>
+                  <option value="">Select</option>
+                  {cities.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section className="profile-card card">
+          <header className="profile-card-head">
+            <span className="profile-card-icon prefs" aria-hidden="true" />
+            <h4>Preferences</h4>
+          </header>
+          <div className="profile-fields two">
+            <label className="field">
+              <span>Language</span>
+              <select className="input" value={form.language} onChange={(e) => upd('language', e.target.value)}>
+                {LANGUAGES.map((l) => (
+                  <option key={l} value={l}>{l}</option>
+                ))}
+              </select>
+            </label>
+            <label className="field">
+              <span>Timezone</span>
+              <select className="input" value={form.timezone} onChange={(e) => upd('timezone', e.target.value)}>
+                {TIMEZONES.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="profile-bio-block">
+            <header className="profile-card-head compact">
+              <span className="profile-card-icon bio" aria-hidden="true" />
+              <h4>Bio</h4>
+            </header>
+            <label className="field">
+              <textarea
+                className="input"
+                rows={4}
+                maxLength={500}
+                placeholder="Write a short bio..."
+                value={form.bio}
+                onChange={(e) => upd('bio', e.target.value)}
+              />
+              <em className="field-help right">{form.bio.length}/500</em>
+            </label>
+          </div>
+        </section>
       </div>
-    </div>
+
+      <div className="profile-actions">
+        <button type="submit" className="btn" disabled={saving || !dirty}>
+          {saving ? 'Saving…' : 'Save Changes'}
+        </button>
+      </div>
+    </form>
   );
 }

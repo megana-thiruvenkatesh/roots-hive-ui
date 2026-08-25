@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext.jsx';
 import { canAccessPath } from './lib/roles.js';
 import Layout from './components/Layout.jsx';
 import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AIChat from './pages/AIChat.jsx';
 import CapaList from './pages/capa/ComplaintList.jsx';
@@ -23,8 +24,6 @@ import UserManagement from './pages/config/UserManagement.jsx';
 import SettingsLayout from './pages/settings/SettingsLayout.jsx';
 import MyProfile from './pages/settings/MyProfile.jsx';
 import Appearance from './pages/settings/Appearance.jsx';
-import AiBehavior from './pages/settings/AiBehavior.jsx';
-import Regional from './pages/settings/Regional.jsx';
 import AiModels from './pages/settings/AiModels.jsx';
 import ApiSettings from './pages/settings/ApiSettings.jsx';
 import KnowledgeBase from './pages/settings/KnowledgeBase.jsx';
@@ -66,6 +65,14 @@ export default function App() {
         }
       />
       <Route
+        path="/register"
+        element={
+          <GuestOnly>
+            <Register />
+          </GuestOnly>
+        }
+      />
+      <Route
         path="/"
         element={
           <Protected>
@@ -103,8 +110,8 @@ export default function App() {
           <Route index element={<Navigate to="profile" replace />} />
           <Route path="profile" element={<MyProfile />} />
           <Route path="appearance" element={<Appearance />} />
-          <Route path="behavior" element={<AiBehavior />} />
-          <Route path="regional" element={<Regional />} />
+          <Route path="behavior" element={<Navigate to="/settings/profile" replace />} />
+          <Route path="regional" element={<Navigate to="/settings/profile" replace />} />
           <Route path="models" element={<AiModels />} />
           <Route path="api" element={<ApiSettings />} />
           <Route path="kb" element={<KnowledgeBase />} />
