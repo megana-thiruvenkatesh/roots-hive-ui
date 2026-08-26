@@ -119,9 +119,7 @@ const NAV = [
       { to: '/config/overview', label: 'Overview', roles: [ROLES.ADMIN] },
       { to: '/config/modules', label: 'Modules', roles: [ROLES.ADMIN] },
       { to: '/config/policy', label: 'Policy Config', roles: [ROLES.ADMIN] },
-      { to: '/config/users', label: 'User Mgmt', roles: [ROLES.ADMIN] },
       { to: '/config/complaint-masters', label: 'Complaint Masters', roles: [ROLES.ADMIN] },
-      { to: '/config/audit-logs', label: 'Audit Logs', roles: [ROLES.ADMIN, ROLES.QUALITY_HEAD] },
     ],
   },
   {
@@ -134,6 +132,13 @@ const NAV = [
         children: [
           { to: '/settings/profile', label: 'My Profile' },
           { to: '/settings/appearance', label: 'Appearance' },
+        ],
+      },
+      {
+        label: 'Administration',
+        children: [
+          { to: '/settings/users', label: 'User Settings', roles: [ROLES.ADMIN] },
+          { to: '/settings/audit-logs', label: 'Audit Logs', roles: [ROLES.ADMIN, ROLES.QUALITY_HEAD] },
         ],
       },
       {

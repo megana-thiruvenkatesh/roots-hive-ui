@@ -136,12 +136,13 @@ router.get('/meta/assignees', async (_req, res) => {
 /** Similar historic cases from type-scoped file/KB/DB sources */
 router.post('/similar', async (req, res) => {
   try {
-    const { type, description, defectCat, part } = req.body || {};
+    const { type, description, defectCat, part, partCode } = req.body || {};
     const matches = await findSimilarHistoric(pool, {
       type,
       description,
       defectCat,
       part,
+      partCode,
     });
     const suggestion = buildAiSuggestion({
       type,

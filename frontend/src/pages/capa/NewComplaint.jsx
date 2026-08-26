@@ -10,6 +10,8 @@ import FieldSourcePicker from '../../components/FieldSourcePicker.jsx';
 import { COMPLAINT_TYPES, COMPLAINT_SEVERITIES } from '../../lib/complaintFormOptions.js';
 import { useComplaintMasters } from '../../lib/useComplaintMasters.js';
 import { logAudit } from '../../lib/auditLog.js';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { can } from '../../lib/roleAccess.js';
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
@@ -29,6 +31,28 @@ function whyWhyToArray(text) {
     .split(/\n+/)
     .map((line) => line.trim())
     .filter(Boolean);
+}
+
+/** Build Card 1 / AI suggestion from selected historic seed (RCA, Why-Why, CA, PA). */
+function suggestionFromHistoric(item) {
+  if (!item?.id) return null;
+  const whyWhy = Array.isArray(item.whyWhy) ? item.whyWhy.map(String).filter(Boolean) : [];
+  return {
+    summary: `Grounded in historic case ${item.id} (seed RCA / Why-Why / CA / PA).`,
+    rootCause: item.rootCause || item.chunk?.rca?.IMS_ROOTCAUSE || '',
+    whyWhy,
+    correctiveAction: item.correctiveAction || item.chunk?.ca?.IMS_CORRECTIVEACTION || '',
+    preventiveAction:
+      item.preventiveAction ||
+      item.chunk?.pa?.IMS_PREVENTIVEACTION ||
+      item.chunk?.pa?.IMS_ONSITEVERIFICATION ||
+      '',
+    sources: [item.id],
+    matchId: item.id,
+    matchDate: item.recordDate || null,
+    similarityScore: item.similarityScore ?? null,
+    sourceType: item.sourceType || 'Supplier',
+  };
 }
 
 const FLOW_STEPS = [
@@ -128,12 +152,21 @@ function validateCapa(form) {
 
 export default function NewComplaint() {
   const { pushToast, refreshUnread } = useAppAlerts();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { masters } = useComplaintMasters();
   const typeOptions = masters.types?.length ? masters.types : COMPLAINT_TYPES;
   const severityOptions = masters.severities?.length ? masters.severities : COMPLAINT_SEVERITIES;
   const defectOptionsList = masters.defects?.length ? masters.defects : defectOptions();
+
+  const canViewDetails = can(user, 'nc_details_card', 'view') || can(user, 'complaints_new', 'read') || can(user, 'complaints_new', 'create');
+  const canEditDetails = can(user, 'nc_details_card', 'edit') || can(user, 'complaints_new', 'update') || can(user, 'complaints_new', 'create');
+  const canViewHistoric = can(user, 'nc_historic_card', 'view');
+  const canSelectRef = can(user, 'nc_historic_card', 'select_reference');
+  const canViewAi = can(user, 'nc_ai_card', 'view');
+  const canGenerateAi = can(user, 'nc_ai_card', 'generate');
+  const canApplyAi = can(user, 'nc_ai_card', 'apply');
 
   const [step, setStep] = useState(1);
   const [flowDir, setFlowDir] = useState('forward');
@@ -179,6 +212,14 @@ export default function NewComplaint() {
     historic: false,
     ai: false,
   });
+
+  useEffect(() => {
+    setCollapsedPanes({
+      details: !canViewDetails,
+      historic: !canViewHistoric,
+      ai: !canViewAi,
+    });
+  }, [canViewDetails, canViewHistoric, canViewAi]);
   const historicFilter = useHistoricRecordsFilter(matches);
   const resultsToShow = clampResultsToShow(form.resultsToShow);
   const shownHistoric = historicFilter.shownMatches.slice(0, resultsToShow);
@@ -302,15 +343,24 @@ export default function NewComplaint() {
         description: debouncedDesc,
         defectCat: debouncedCat,
         part: debouncedPart,
+        partCode: form.partCode,
       })
       .then((data) => {
         if (cancelled) return;
-        setMatches(data.matches || []);
-        setSuggestion(data.suggestion || null);
+        const nextMatches = data.matches || [];
+        setMatches(nextMatches);
         setExpanded({});
         setSelectedGrounding((current) => {
-          if (!current?.id) return null;
-          return (data.matches || []).some((match) => match.id === current.id) ? current : null;
+          if (!current?.id) {
+            // Defer suggestion update outside updater — handled below via flag
+            return null;
+          }
+          return nextMatches.find((match) => match.id === current.id) || null;
+        });
+        // When no selection, use similar API suggestion; when selected, effect syncs seed.
+        setSuggestion((prev) => {
+          // Will be overwritten by selectedGrounding effect if a case is selected.
+          return data.suggestion || prev;
         });
       })
       .catch(() => {
@@ -325,7 +375,13 @@ export default function NewComplaint() {
     return () => {
       cancelled = true;
     };
-  }, [debouncedDesc, debouncedCat, debouncedPart, debouncedType]);
+  }, [debouncedDesc, debouncedCat, debouncedPart, debouncedType, form.partCode]);
+
+  useEffect(() => {
+    if (selectedGrounding?.id) {
+      setSuggestion(suggestionFromHistoric(selectedGrounding));
+    }
+  }, [selectedGrounding]);
 
   async function generateGuidedAssist() {
     if (!selectedGrounding?.id) {
@@ -333,11 +389,13 @@ export default function NewComplaint() {
     }
     setAiBusy(true);
     try {
+      const seedSuggestion = suggestionFromHistoric(selectedGrounding);
       const data = await api.post('/ai/complaint-assist', {
         type: form.type || 'Internal',
         description: form.desc,
         defectCat: form.defectCat,
         part: form.part,
+        partCode: form.partCode,
         groundingId: selectedGrounding.id,
         grounding: {
           id: selectedGrounding.id,
@@ -346,10 +404,37 @@ export default function NewComplaint() {
           correctiveAction: selectedGrounding.correctiveAction,
           preventiveAction: selectedGrounding.preventiveAction,
           symptom: selectedGrounding.desc || selectedGrounding.symptom,
+          description: selectedGrounding.description,
+          recordDate: selectedGrounding.recordDate,
+          sourceType: selectedGrounding.sourceType,
+          chunk: selectedGrounding.chunk,
         },
       });
-      if (data.suggestion) setSuggestion(data.suggestion);
-      return data;
+      // Prefer API suggestion, but keep seed fields if API returns empty generics.
+      const apiSug = data.suggestion || null;
+      const merged = {
+        ...(seedSuggestion || {}),
+        ...(apiSug || {}),
+        rootCause: apiSug?.rootCause || seedSuggestion?.rootCause || '',
+        whyWhy:
+          Array.isArray(apiSug?.whyWhy) && apiSug.whyWhy.length
+            ? apiSug.whyWhy
+            : seedSuggestion?.whyWhy || [],
+        correctiveAction: apiSug?.correctiveAction || seedSuggestion?.correctiveAction || '',
+        preventiveAction: apiSug?.preventiveAction || seedSuggestion?.preventiveAction || '',
+        matchId: selectedGrounding.id,
+        summary: `Grounded in ${selectedGrounding.id}.`,
+      };
+      setSuggestion(merged);
+      return { ...data, suggestion: merged };
+    } catch (err) {
+      // Offline / API fail: still show seed data so the click-through demo works.
+      const seedSuggestion = suggestionFromHistoric(selectedGrounding);
+      if (seedSuggestion) {
+        setSuggestion(seedSuggestion);
+        return { suggestion: seedSuggestion };
+      }
+      throw err;
     } finally {
       setAiBusy(false);
     }
@@ -363,8 +448,23 @@ export default function NewComplaint() {
       correctiveAction: fields.correctiveAction ?? prev.correctiveAction,
       preventiveAction: fields.preventiveAction ?? prev.preventiveAction,
     }));
-    setToastMsg({ tone: 'success', text: 'Resolution draft saved into RCA / Why-Why / CA / PA fields.' });
-    pushToast('AI resolution draft applied to the form', 'success');
+    setFieldSources((prev) => ({
+      ...prev,
+      rootCause: { source: 'ai', historicId: selectedGrounding?.id || null, historicLabel: selectedGrounding?.id || null },
+      whyWhy: { source: 'ai', historicId: selectedGrounding?.id || null, historicLabel: selectedGrounding?.id || null },
+      correctiveAction: { source: 'ai', historicId: selectedGrounding?.id || null, historicLabel: selectedGrounding?.id || null },
+      preventiveAction: { source: 'ai', historicId: selectedGrounding?.id || null, historicLabel: selectedGrounding?.id || null },
+    }));
+    if (selectedGrounding?.id) {
+      setLinkedHistoric((prev) => ({ ...prev, [selectedGrounding.id]: selectedGrounding }));
+    }
+  }
+
+  function selectHistoricReference(item) {
+    setSelectedGrounding(item);
+    const seed = suggestionFromHistoric(item);
+    if (seed) setSuggestion(seed);
+    setLinkedHistoric((prev) => ({ ...prev, [item.id]: item }));
   }
 
   function buildPayload(extra = {}) {
@@ -607,6 +707,10 @@ export default function NewComplaint() {
                   <PaneChevron collapsed={false} />
                 </button>
             <div className="nc-wizard-stage">
+              <fieldset
+                disabled={!canEditDetails}
+                style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}
+              >
               <div
                 key={step}
                 className={`nc-wizard-scroll nc-flow-panel nc-flow-${flowDir}`}
@@ -617,14 +721,14 @@ export default function NewComplaint() {
                       <div className="field">
                         <label>Complaint Type</label>
                         <select className="input" value={form.type} onChange={(e) => upd('type', e.target.value)}>
-                          <option value="">(none selected)</option>
+                          <option value="" />
                           {typeOptions.map((t) => <option key={t}>{t}</option>)}
                         </select>
                       </div>
                       <div className="field">
                         <label>Issue Severity</label>
                         <select className="input" value={form.severity} onChange={(e) => upd('severity', e.target.value)}>
-                          <option value="">(not specified)</option>
+                          <option value="" />
                           {severityOptions.map((s) => <option key={s}>{s}</option>)}
                         </select>
                       </div>
@@ -655,7 +759,7 @@ export default function NewComplaint() {
                         <div className="field">
                           <label>Defect Category</label>
                           <select className="input" value={form.defectCat} onChange={(e) => upd('defectCat', e.target.value)}>
-                            <option value="">(none selected)</option>
+                            <option value="" />
                             {defectOptionsList.map((d) => <option key={d}>{d}</option>)}
                           </select>
                         </div>
@@ -668,7 +772,7 @@ export default function NewComplaint() {
                       <div className="field">
                         <label>Defect Category</label>
                         <select className="input" value={form.defectCat} onChange={(e) => upd('defectCat', e.target.value)}>
-                          <option value="">(none selected)</option>
+                          <option value="" />
                           {defectOptionsList.map((d) => <option key={d}>{d}</option>)}
                         </select>
                       </div>
@@ -760,6 +864,7 @@ export default function NewComplaint() {
                 {error ? <p style={{ color: 'var(--red)', fontSize: 13 }}>{error}</p> : null}
                 {matching && step === 1 ? <span className="muted">Matching historic records…</span> : null}
               </div>
+              </fieldset>
             </div>
 
             <div className="nc-wizard-footer">
@@ -890,7 +995,7 @@ export default function NewComplaint() {
                         expanded={Boolean(expanded[m.id])}
                         onToggle={() => setExpanded((current) => ({ ...current, [m.id]: !current[m.id] }))}
                         selected={selectedGrounding?.id === m.id}
-                        onSelectReference={(item) => setSelectedGrounding(item)}
+                        onSelectReference={canSelectRef ? selectHistoricReference : undefined}
                       />
                     ))}
                   </div>
@@ -943,8 +1048,8 @@ export default function NewComplaint() {
               grounding={selectedGrounding}
               suggestion={suggestion}
               busy={aiBusy}
-              onGenerate={generateGuidedAssist}
-              onApplyToForm={applyGuidedToForm}
+              onGenerate={canGenerateAi ? generateGuidedAssist : undefined}
+              onApplyToForm={canApplyAi ? applyGuidedToForm : undefined}
             />
           </div>
             </>

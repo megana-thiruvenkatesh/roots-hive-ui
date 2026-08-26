@@ -155,7 +155,7 @@ export default function AiGuidedSolution({
           <div className="ai-guide-panel">
             <h3>Generate grounded AI Suggestions</h3>
             <p className="ai-guide-copy">
-              First select one retrieved historical case. Its recorded Why-Why analysis, root cause, corrective action, and preventive controls will ground the new proposal.
+              First select one retrieved historical case as ground truth. Its seeded Why-Why, root cause, CA, and PA drive Card 1 suggestions and this AI draft.
             </p>
             {groundingLabel ? (
               <div className="ai-guide-grounding ready">
@@ -175,7 +175,7 @@ export default function AiGuidedSolution({
               </div>
             )}
             {error ? <p className="ai-guide-error">{error}</p> : null}
-            <button type="button" className="ai-guide-primary" disabled={busy || !grounding?.id} onClick={handleGenerate}>
+            <button type="button" className="ai-guide-primary" disabled={busy || !grounding?.id || !onGenerate} onClick={handleGenerate}>
               {busy ? 'Generating…' : 'Generate AI Suggestions'}
             </button>
           </div>
@@ -221,7 +221,7 @@ export default function AiGuidedSolution({
             <button type="button" className="ai-guide-primary" onClick={confirmAnalysis}>
               Confirm edited analysis & generate actions
             </button>
-            <button type="button" className="ai-guide-secondary" disabled={busy} onClick={handleGenerate}>
+            <button type="button" className="ai-guide-secondary" disabled={busy || !onGenerate} onClick={handleGenerate}>
               Regenerate complete analysis
             </button>
           </div>
@@ -277,7 +277,7 @@ export default function AiGuidedSolution({
                 <textarea className="input" rows={3} value={finalPa} onChange={(e) => setFinalPa(e.target.value)} placeholder="—" />
               </div>
             </div>
-            <button type="button" className="ai-guide-primary" onClick={saveToForm}>
+            <button type="button" className="ai-guide-primary" disabled={!onApplyToForm} onClick={saveToForm}>
               Save Resolution Draft
             </button>
             <button type="button" className="ai-guide-secondary" onClick={() => setStep(2)}>

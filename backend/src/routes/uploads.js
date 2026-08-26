@@ -6,6 +6,7 @@ const pool = require('../db/pool');
 const { requireAuth } = require('../middleware/auth');
 const { ensureKbMediaSchema } = require('../services/kbMedia');
 const { writeAuditLog } = require('../services/auditLog');
+const { importHistoricBuffer, readMeta, hasActiveDataset, readCases } = require('../services/historicDataset');
 
 const router = express.Router();
 router.use(requireAuth);
@@ -32,6 +33,11 @@ const complaintUpload = multer({
 
 const kbUpload = multer({
   storage: diskStorage(kbDir),
+  limits: { fileSize: 40 * 1024 * 1024 },
+});
+
+const historicUpload = multer({
+  storage: multer.memoryStorage(),
   limits: { fileSize: 40 * 1024 * 1024 },
 });
 
@@ -151,6 +157,65 @@ router.post('/kb', kbUpload.single('file'), async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: e.message || 'KB upload failed' });
+  }
+});
+
+// POST /api/uploads/historic-dataset — Excel/CSV historic records (replaces active dataset)
+router.post('/historic-dataset', historicUpload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'file is required' });
+    const name = req.file.originalname || 'historic-dataset.xlsx';
+    if (!/\.(xlsx|xls|csv|tsv)$/i.test(name)) {
+      return res.status(400).json({ error: 'Upload an Excel (.xlsx) or CSV file' });
+    }
+
+    const { cases, meta } = await importHistoricBuffer(req.file.buffer, name, req.user?.email || req.user?.id);
+
+    // Historic Excel is not a KB document — remove any prior same-name KB upload
+    // so Uploaded Datasets does not show it again as "Records: 1".
+    try {
+      await ensureKbMediaSchema();
+      await pool.query(
+        `DELETE FROM kb_documents
+          WHERE lower(coalesce(original_name, '')) = lower($1)
+             OR lower(coalesce(name, '')) = lower($1)`,
+        [name]
+      );
+    } catch (cleanupErr) {
+      console.warn('historic dataset KB cleanup skipped:', cleanupErr.message);
+    }
+
+    await writeAuditLog({
+      user: req.user,
+      module: 'Uploaded Datasets',
+      action: 'Import Historic Dataset',
+      detail: `${name} · ${cases.length} historic records`,
+      meta: { recordCount: cases.length, defectCategories: meta.defectCategories?.length || 0 },
+    });
+
+    res.status(201).json({
+      ok: true,
+      meta,
+      sample: cases.slice(0, 3),
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message || 'Historic dataset import failed' });
+  }
+});
+
+// GET /api/uploads/historic-dataset — status of active historic dataset
+router.get('/historic-dataset', async (_req, res) => {
+  try {
+    const meta = readMeta();
+    res.json({
+      active: hasActiveDataset(),
+      meta,
+      recordCount: hasActiveDataset() ? readCases().length : 0,
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Failed to load historic dataset status' });
   }
 });
 

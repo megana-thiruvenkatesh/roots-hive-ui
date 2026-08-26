@@ -1,0 +1,1802 @@
+[
+  {
+    "id": "PROD-S/1",
+    "symptom": "Dia Over Size",
+    "description": "M6 thread minor diameter over size.,Specification,Min - 4.917mm,Max - 5.153mm,observed - 5.24mm",
+    "part": "Housing 931005-003 MC",
+    "partCode": "XPINM0002MC",
+    "customer": "32000250",
+    "defectCat": "Dia Over Size",
+    "lotQty": "150",
+    "defectQty": "3",
+    "recordDate": "2023-10-31",
+    "rootCause": "Tool wear / incorrect offset caused Dia Over Size on Housing 931005-003 MC.",
+    "whyWhy": [
+      "Observed Dia Over Size against drawing specification.",
+      "Cutting tool / insert condition drifted beyond process window.",
+      "Tool life / offset verification not enforced at set frequency.",
+      "Process control plan missing hard stop for diameter check.",
+      "Standard work for tool change & first-piece approval incomplete."
+    ],
+    "correctiveAction": "Quarantine affected lot, rework/sort Housing 931005-003 MC, reset tool offset, and re-verify first article.",
+    "preventiveAction": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+    "severity": "Major",
+    "process": "Machining / Threading",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "1",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/1",
+        "IMS_PARTY": "32000250",
+        "IMS_ITEMCODE": "XPINM0002MC",
+        "IMS_ITEMNAME": "Housing 931005-003 MC",
+        "IMS_DATEOFISSUE": "2023-10-31",
+        "IMS_LOTQTY": "150",
+        "IMS_DEFECTQTY": "3",
+        "IMS_DEFECTCATEGORY": "Dia Over Size",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Threading"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "M6 thread minor diameter over size.,Specification,Min - 4.917mm,Max - 5.153mm,observed - 5.24mm"
+      },
+      "rca": {
+        "IMS_WHY": "Observed Dia Over Size against drawing specification.\nCutting tool / insert condition drifted beyond process window.\nTool life / offset verification not enforced at set frequency.\nProcess control plan missing hard stop for diameter check.\nStandard work for tool change & first-piece approval incomplete.",
+        "IMS_ROOTCAUSE": "Tool wear / incorrect offset caused Dia Over Size on Housing 931005-003 MC."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine affected lot, rework/sort Housing 931005-003 MC, reset tool offset, and re-verify first article."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+        "IMS_PREVENTIVEACTION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/2",
+    "symptom": "loose burr",
+    "description": "Ketten Spanner ACW 5 270 (A E69 9597) machining burr not removed.\r\n\r\nReceived customer complaint on 31-10-2023.",
+    "part": "Kettenspanner ACW 5 270(A E69 9597) MC",
+    "partCode": "XGBAR0001MC",
+    "customer": "32000267",
+    "defectCat": "loose burr",
+    "lotQty": "450",
+    "defectQty": "20",
+    "recordDate": "2023-10-31",
+    "rootCause": "Deburr operation incomplete — residual burr on Kettenspanner ACW 5 270(A E69 9597) MC.",
+    "whyWhy": [
+      "Customer found loose / unremoved machining burr.",
+      "Deburr station skipped or incompletely performed.",
+      "No poka-yoke / visual standard at end of line.",
+      "Operator training / work instruction for burr removal weak.",
+      "Final inspection sampling did not cover burr critical zones."
+    ],
+    "correctiveAction": "Contain lot, 100% sort for burr, retrain operators, and re-inspect before ship.",
+    "preventiveAction": "Add deburr check fixture / visual board and include burr zones in outgoing QC checklist.",
+    "severity": "Major",
+    "process": "Machining / Deburr",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "2",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/2",
+        "IMS_PARTY": "32000267",
+        "IMS_ITEMCODE": "XGBAR0001MC",
+        "IMS_ITEMNAME": "Kettenspanner ACW 5 270(A E69 9597) MC",
+        "IMS_DATEOFISSUE": "2023-10-31",
+        "IMS_LOTQTY": "450",
+        "IMS_DEFECTQTY": "20",
+        "IMS_DEFECTCATEGORY": "loose burr",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Deburr"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Ketten Spanner ACW 5 270 (A E69 9597) machining burr not removed.\r\n\r\nReceived customer complaint on 31-10-2023."
+      },
+      "rca": {
+        "IMS_WHY": "Customer found loose / unremoved machining burr.\nDeburr station skipped or incompletely performed.\nNo poka-yoke / visual standard at end of line.\nOperator training / work instruction for burr removal weak.\nFinal inspection sampling did not cover burr critical zones.",
+        "IMS_ROOTCAUSE": "Deburr operation incomplete — residual burr on Kettenspanner ACW 5 270(A E69 9597) MC."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Contain lot, 100% sort for burr, retrain operators, and re-inspect before ship."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Add deburr check fixture / visual board and include burr zones in outgoing QC checklist.",
+        "IMS_PREVENTIVEACTION": "Add deburr check fixture / visual board and include burr zones in outgoing QC checklist."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/3",
+    "symptom": "Housing base drive 553253001 FT",
+    "description": "TEST",
+    "part": "Housing base drive 553253001 FT",
+    "partCode": "SPRMC0059FT",
+    "customer": "32003528",
+    "defectCat": "",
+    "lotQty": "42",
+    "defectQty": "17",
+    "recordDate": "2023-10-31",
+    "rootCause": "Process control gap caused quality defect on Housing base drive 553253001 FT.",
+    "whyWhy": [
+      "Defect observed: quality defect.",
+      "Immediate process condition allowed nonconformance.",
+      "Detection control did not stop escape.",
+      "Standard reaction plan not executed in time.",
+      "Systemic control-plan weakness for this failure mode."
+    ],
+    "correctiveAction": "Contain affected lot of Housing base drive 553253001 FT, correct process, and re-inspect before release.",
+    "preventiveAction": "Update control plan for quality defect, add detection checkpoint, and train operators.",
+    "severity": "Major",
+    "process": "Quality / Manufacturing",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "3",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/3",
+        "IMS_PARTY": "32003528",
+        "IMS_ITEMCODE": "SPRMC0059FT",
+        "IMS_ITEMNAME": "Housing base drive 553253001 FT",
+        "IMS_DATEOFISSUE": "2023-10-31",
+        "IMS_LOTQTY": "42",
+        "IMS_DEFECTQTY": "17",
+        "IMS_DEFECTCATEGORY": "",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Quality / Manufacturing"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "TEST"
+      },
+      "rca": {
+        "IMS_WHY": "Defect observed: quality defect.\nImmediate process condition allowed nonconformance.\nDetection control did not stop escape.\nStandard reaction plan not executed in time.\nSystemic control-plan weakness for this failure mode.",
+        "IMS_ROOTCAUSE": "Process control gap caused quality defect on Housing base drive 553253001 FT."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Contain affected lot of Housing base drive 553253001 FT, correct process, and re-inspect before release."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Update control plan for quality defect, add detection checkpoint, and train operators.",
+        "IMS_PREVENTIVEACTION": "Update control plan for quality defect, add detection checkpoint, and train operators."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/4",
+    "symptom": "Dia Over Size",
+    "description": "M8X1.25-6H Thread Minor Diameter Over Size,Dimension - 6.64 - 6.91,Actual -7.02",
+    "part": "EGR Connecting Pipe 24340573 IM",
+    "partCode": "SGVEC0018IM",
+    "customer": "32000250",
+    "defectCat": "Dia Over Size",
+    "lotQty": "20",
+    "defectQty": "3",
+    "recordDate": "2023-11-02",
+    "rootCause": "Tool wear / incorrect offset caused Dia Over Size on EGR Connecting Pipe 24340573 IM.",
+    "whyWhy": [
+      "Observed Dia Over Size against drawing specification.",
+      "Cutting tool / insert condition drifted beyond process window.",
+      "Tool life / offset verification not enforced at set frequency.",
+      "Process control plan missing hard stop for diameter check.",
+      "Standard work for tool change & first-piece approval incomplete."
+    ],
+    "correctiveAction": "Quarantine affected lot, rework/sort EGR Connecting Pipe 24340573 IM, reset tool offset, and re-verify first article.",
+    "preventiveAction": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+    "severity": "Major",
+    "process": "Machining / Threading",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "4",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/4",
+        "IMS_PARTY": "32000250",
+        "IMS_ITEMCODE": "SGVEC0018IM",
+        "IMS_ITEMNAME": "EGR Connecting Pipe 24340573 IM",
+        "IMS_DATEOFISSUE": "2023-11-02",
+        "IMS_LOTQTY": "20",
+        "IMS_DEFECTQTY": "3",
+        "IMS_DEFECTCATEGORY": "Dia Over Size",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Threading"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "M8X1.25-6H Thread Minor Diameter Over Size,Dimension - 6.64 - 6.91,Actual -7.02"
+      },
+      "rca": {
+        "IMS_WHY": "Observed Dia Over Size against drawing specification.\nCutting tool / insert condition drifted beyond process window.\nTool life / offset verification not enforced at set frequency.\nProcess control plan missing hard stop for diameter check.\nStandard work for tool change & first-piece approval incomplete.",
+        "IMS_ROOTCAUSE": "Tool wear / incorrect offset caused Dia Over Size on EGR Connecting Pipe 24340573 IM."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine affected lot, rework/sort EGR Connecting Pipe 24340573 IM, reset tool offset, and re-verify first article."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+        "IMS_PREVENTIVEACTION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/6",
+    "symptom": "Operation Missing",
+    "description": "M 6 thread operation missing at Bush Handle\r\nNote:\r\nComplaint Received on 08.11.2023\r\nDefect Part Produced on 06.11.2023\r\nproblem occurred during manual  tapping process\r\nOperator Name : Mrs Murgathal\r\nShift : 1 shift",
+    "part": "Bush handle 325066 MC",
+    "partCode": "SPRMC0036MC",
+    "customer": "32000558",
+    "defectCat": "Operation Missing",
+    "lotQty": "2001",
+    "defectQty": "2",
+    "recordDate": "2023-11-08",
+    "rootCause": "Process step skipped for Bush handle 325066 MC due to routing / traveler gap.",
+    "whyWhy": [
+      "Operation found missing on Bush handle 325066 MC.",
+      "Traveler / routing did not force completion gate.",
+      "Previous station released parts without confirmation.",
+      "No barcode / scan validation for mandatory ops.",
+      "Control plan did not define hard stop before packing."
+    ],
+    "correctiveAction": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect.",
+    "preventiveAction": "Enforce scan-based operation completion and add missing-op check before FG release.",
+    "severity": "Critical",
+    "process": "Routing / Assembly",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "6",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/6",
+        "IMS_PARTY": "32000558",
+        "IMS_ITEMCODE": "SPRMC0036MC",
+        "IMS_ITEMNAME": "Bush handle 325066 MC",
+        "IMS_DATEOFISSUE": "2023-11-08",
+        "IMS_LOTQTY": "2001",
+        "IMS_DEFECTQTY": "2",
+        "IMS_DEFECTCATEGORY": "Operation Missing",
+        "IMS_SEVERITY": "Critical",
+        "IMS_PROCESS": "Routing / Assembly"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "M 6 thread operation missing at Bush Handle\r\nNote:\r\nComplaint Received on 08.11.2023\r\nDefect Part Produced on 06.11.2023\r\nproblem occurred during manual  tapping process\r\nOperator Name : Mrs Murgathal\r\nShift : 1 shift"
+      },
+      "rca": {
+        "IMS_WHY": "Operation found missing on Bush handle 325066 MC.\nTraveler / routing did not force completion gate.\nPrevious station released parts without confirmation.\nNo barcode / scan validation for mandatory ops.\nControl plan did not define hard stop before packing.",
+        "IMS_ROOTCAUSE": "Process step skipped for Bush handle 325066 MC due to routing / traveler gap."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Enforce scan-based operation completion and add missing-op check before FG release.",
+        "IMS_PREVENTIVEACTION": "Enforce scan-based operation completion and add missing-op check before FG release."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/7",
+    "symptom": "Nogo answering",
+    "description": "32 H8 PPG Go not Answering.",
+    "part": "Housing filter 1635548000 MC",
+    "partCode": "XGACP0041MC",
+    "customer": "32000125",
+    "defectCat": "Nogo answering",
+    "lotQty": "40",
+    "defectQty": "1",
+    "recordDate": "2023-11-08",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "7",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/7",
+        "IMS_PARTY": "32000125",
+        "IMS_ITEMCODE": "XGACP0041MC",
+        "IMS_ITEMNAME": "Housing filter 1635548000 MC",
+        "IMS_DATEOFISSUE": "2023-11-08",
+        "IMS_LOTQTY": "40",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "32 H8 PPG Go not Answering."
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/8",
+    "symptom": "Nogo answering",
+    "description": "M3X0.5 TPG go tight part produced on at 7.11.2023-First shift VMC01 operator name Mr.Rajkumar complaint received from rcpl on 9.11.2023",
+    "part": "Housing base idle 553253002 MC",
+    "partCode": "SPRMC0058MC",
+    "customer": "32000263",
+    "defectCat": "Nogo answering",
+    "lotQty": "165",
+    "defectQty": "1",
+    "recordDate": "2023-11-09",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "8",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/8",
+        "IMS_PARTY": "32000263",
+        "IMS_ITEMCODE": "SPRMC0058MC",
+        "IMS_ITEMNAME": "Housing base idle 553253002 MC",
+        "IMS_DATEOFISSUE": "2023-11-09",
+        "IMS_LOTQTY": "165",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "M3X0.5 TPG go tight part produced on at 7.11.2023-First shift VMC01 operator name Mr.Rajkumar complaint received from rcpl on 9.11.2023"
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/9",
+    "symptom": "Nogo answering",
+    "description": "Defect produced on - 19-10-2023\r\nComplaint received on -09-11-2023\r\nMachine name-VMC-2\r\nOperator name-VIGNESH",
+    "part": "VALVE REGUL. HOUSING 1625506002 AN",
+    "partCode": "XGACP0060AN",
+    "customer": "32000250",
+    "defectCat": "Nogo answering",
+    "lotQty": "119",
+    "defectQty": "1",
+    "recordDate": "2023-11-09",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "9",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/9",
+        "IMS_PARTY": "32000250",
+        "IMS_ITEMCODE": "XGACP0060AN",
+        "IMS_ITEMNAME": "VALVE REGUL. HOUSING 1625506002 AN",
+        "IMS_DATEOFISSUE": "2023-11-09",
+        "IMS_LOTQTY": "119",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Defect produced on - 19-10-2023\r\nComplaint received on -09-11-2023\r\nMachine name-VMC-2\r\nOperator name-VIGNESH"
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/10",
+    "symptom": "Nogo answering",
+    "description": "G1.1/4'-11 BSP L.H TPG Nogo answering.",
+    "part": "Manifold 1638 2653 01 MC",
+    "partCode": "XGACP0029MC",
+    "customer": "32000125",
+    "defectCat": "Nogo answering",
+    "lotQty": "30",
+    "defectQty": "1",
+    "recordDate": "2023-11-09",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "10",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/10",
+        "IMS_PARTY": "32000125",
+        "IMS_ITEMCODE": "XGACP0029MC",
+        "IMS_ITEMNAME": "Manifold 1638 2653 01 MC",
+        "IMS_DATEOFISSUE": "2023-11-09",
+        "IMS_LOTQTY": "30",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "G1.1/4'-11 BSP L.H TPG Nogo answering."
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/11",
+    "symptom": "Offset",
+    "description": "Defect part produced on-06-11-2023\r\nComplaint received on-09-11-2023\r\nMachine name - vmc-06\r\noperator name-R.Anish",
+    "part": "Housing 931005-003 MC",
+    "partCode": "XPINM0002MC",
+    "customer": "32000250",
+    "defectCat": "Offset",
+    "lotQty": "294",
+    "defectQty": "1",
+    "recordDate": "2023-11-09",
+    "rootCause": "Fixture / program offset incorrect for Housing 931005-003 MC.",
+    "whyWhy": [
+      "Dimensional offset observed on Housing 931005-003 MC.",
+      "Machine / fixture offset not verified after setup.",
+      "Setup checklist incomplete or not signed off.",
+      "No first-article CMM / gauge confirmation after changeover.",
+      "Standard setup recovery method not followed."
+    ],
+    "correctiveAction": "Hold lot, correct fixture/program offset, machine first article, and sort WIP.",
+    "preventiveAction": "Mandatory setup checklist with first-article approval before production release.",
+    "severity": "Major",
+    "process": "Machining / Setup",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "11",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/11",
+        "IMS_PARTY": "32000250",
+        "IMS_ITEMCODE": "XPINM0002MC",
+        "IMS_ITEMNAME": "Housing 931005-003 MC",
+        "IMS_DATEOFISSUE": "2023-11-09",
+        "IMS_LOTQTY": "294",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Offset",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Setup"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Defect part produced on-06-11-2023\r\nComplaint received on-09-11-2023\r\nMachine name - vmc-06\r\noperator name-R.Anish"
+      },
+      "rca": {
+        "IMS_WHY": "Dimensional offset observed on Housing 931005-003 MC.\nMachine / fixture offset not verified after setup.\nSetup checklist incomplete or not signed off.\nNo first-article CMM / gauge confirmation after changeover.\nStandard setup recovery method not followed.",
+        "IMS_ROOTCAUSE": "Fixture / program offset incorrect for Housing 931005-003 MC."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Hold lot, correct fixture/program offset, machine first article, and sort WIP."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Mandatory setup checklist with first-article approval before production release.",
+        "IMS_PREVENTIVEACTION": "Mandatory setup checklist with first-article approval before production release."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/12",
+    "symptom": "Nogo answering",
+    "description": "M6 tpg nogo  answer in steel hexagonal insert for creel coupling defect part produced on 10.11.2023.compliant received on 17.11.2023. machine name automat, machine no-02.operator name- rajasekar.",
+    "part": "Steel Hexagonal insert for Creel couplin",
+    "partCode": "D130138",
+    "customer": "32003290",
+    "defectCat": "Nogo answering",
+    "lotQty": "1873",
+    "defectQty": "3",
+    "recordDate": "2023-11-17",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "12",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/12",
+        "IMS_PARTY": "32003290",
+        "IMS_ITEMCODE": "D130138",
+        "IMS_ITEMNAME": "Steel Hexagonal insert for Creel couplin",
+        "IMS_DATEOFISSUE": "2023-11-17",
+        "IMS_LOTQTY": "1873",
+        "IMS_DEFECTQTY": "3",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "M6 tpg nogo  answer in steel hexagonal insert for creel coupling defect part produced on 10.11.2023.compliant received on 17.11.2023. machine name automat, machine no-02.operator name- rajasekar."
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/13",
+    "symptom": "Nogo answering",
+    "description": "G1 Tpg nogo passed in Separator 1613815200. Drawing specification Nogo gauge not answer. Problem part production on 8-11-2023 1st shift on vmc(1) operator : Choto kumar. RCPL issue date 20-11-2023.",
+    "part": "Seperator(HEAD-25 1INCH)1613815200 MC",
+    "partCode": "XPACP0057MC",
+    "customer": "32003000",
+    "defectCat": "Nogo answering",
+    "lotQty": "125",
+    "defectQty": "1",
+    "recordDate": "2023-11-20",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "13",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/13",
+        "IMS_PARTY": "32003000",
+        "IMS_ITEMCODE": "XPACP0057MC",
+        "IMS_ITEMNAME": "Seperator(HEAD-25 1INCH)1613815200 MC",
+        "IMS_DATEOFISSUE": "2023-11-20",
+        "IMS_LOTQTY": "125",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "G1 Tpg nogo passed in Separator 1613815200. Drawing specification Nogo gauge not answer. Problem part production on 8-11-2023 1st shift on vmc(1) operator : Choto kumar. RCPL issue date 20-11-2023."
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/14",
+    "symptom": "Operation Missing",
+    "description": "Engraving operation missing.\r\nComplaint received on  21.11.2023 from RCPL.\r\nDefect part produced on 18.11.2023 at Precicraft Cnc works\r\nProblem Occurred in manual engraving process",
+    "part": "Housing Cover 2 459 999 001 MC",
+    "partCode": "SPBBP0064MC",
+    "customer": "32000125",
+    "defectCat": "Operation Missing",
+    "lotQty": "200",
+    "defectQty": "10",
+    "recordDate": "2023-11-21",
+    "rootCause": "Process step skipped for Housing Cover 2 459 999 001 MC due to routing / traveler gap.",
+    "whyWhy": [
+      "Operation found missing on Housing Cover 2 459 999 001 MC.",
+      "Traveler / routing did not force completion gate.",
+      "Previous station released parts without confirmation.",
+      "No barcode / scan validation for mandatory ops.",
+      "Control plan did not define hard stop before packing."
+    ],
+    "correctiveAction": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect.",
+    "preventiveAction": "Enforce scan-based operation completion and add missing-op check before FG release.",
+    "severity": "Critical",
+    "process": "Routing / Assembly",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "14",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/14",
+        "IMS_PARTY": "32000125",
+        "IMS_ITEMCODE": "SPBBP0064MC",
+        "IMS_ITEMNAME": "Housing Cover 2 459 999 001 MC",
+        "IMS_DATEOFISSUE": "2023-11-21",
+        "IMS_LOTQTY": "200",
+        "IMS_DEFECTQTY": "10",
+        "IMS_DEFECTCATEGORY": "Operation Missing",
+        "IMS_SEVERITY": "Critical",
+        "IMS_PROCESS": "Routing / Assembly"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Engraving operation missing.\r\nComplaint received on  21.11.2023 from RCPL.\r\nDefect part produced on 18.11.2023 at Precicraft Cnc works\r\nProblem Occurred in manual engraving process"
+      },
+      "rca": {
+        "IMS_WHY": "Operation found missing on Housing Cover 2 459 999 001 MC.\nTraveler / routing did not force completion gate.\nPrevious station released parts without confirmation.\nNo barcode / scan validation for mandatory ops.\nControl plan did not define hard stop before packing.",
+        "IMS_ROOTCAUSE": "Process step skipped for Housing Cover 2 459 999 001 MC due to routing / traveler gap."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Enforce scan-based operation completion and add missing-op check before FG release.",
+        "IMS_PREVENTIVEACTION": "Enforce scan-based operation completion and add missing-op check before FG release."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/15",
+    "symptom": "Nogo answering",
+    "description": "G1.1/4LH TPG Nogo answering.\r\nComplaint r.eceived on  22.11.2023 from RCPL.\r\nDefect part produced on 18.11.2023 at Precicraft Cnc\r\nProblem Occurred in VMC no: 2nd Operation\r\nOperator Name : Mr Srinivasan\r\nShift : 2 nd Shift",
+    "part": "Manifold 1638 2653 01 MC",
+    "partCode": "XGACP0029MC",
+    "customer": "32000125",
+    "defectCat": "Nogo answering",
+    "lotQty": "30",
+    "defectQty": "1",
+    "recordDate": "2023-11-22",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "15",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/15",
+        "IMS_PARTY": "32000125",
+        "IMS_ITEMCODE": "XGACP0029MC",
+        "IMS_ITEMNAME": "Manifold 1638 2653 01 MC",
+        "IMS_DATEOFISSUE": "2023-11-22",
+        "IMS_LOTQTY": "30",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "G1.1/4LH TPG Nogo answering.\r\nComplaint r.eceived on  22.11.2023 from RCPL.\r\nDefect part produced on 18.11.2023 at Precicraft Cnc\r\nProblem Occurred in VMC no: 2nd Operation\r\nOperator Name : Mr Srinivasan\r\nShift : 2 nd Shift"
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/19",
+    "symptom": "Groove Diameter UnderSize",
+    "description": "Defect part produced on-19/10/2023\r\nComplaint received on-25/11/2023\r\nMachine name-CNC - 1\r\nOperator name- K.Krishna kumar",
+    "part": "C111 Housing 1622348805 AN",
+    "partCode": "XLACP0001AN",
+    "customer": "32000250",
+    "defectCat": "Groove Diameter UnderSize",
+    "lotQty": "99",
+    "defectQty": "2",
+    "recordDate": "2023-11-25",
+    "rootCause": "Groove tool / insert wear causing undersize diameter.",
+    "whyWhy": [
+      "Groove diameter measured under minimum limit.",
+      "Insert wear not detected in-process.",
+      "In-process check frequency insufficient for groove feature.",
+      "No SPC alarm for groove diameter trend.",
+      "Tool change criterion not linked to measured diameter."
+    ],
+    "correctiveAction": "Contain lot, replace groove insert, reset process, and 100% check critical groove.",
+    "preventiveAction": "Increase in-process groove checks and add tool-change trigger from SPC.",
+    "severity": "Major",
+    "process": "Machining / Turning",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "19",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/19",
+        "IMS_PARTY": "32000250",
+        "IMS_ITEMCODE": "XLACP0001AN",
+        "IMS_ITEMNAME": "C111 Housing 1622348805 AN",
+        "IMS_DATEOFISSUE": "2023-11-25",
+        "IMS_LOTQTY": "99",
+        "IMS_DEFECTQTY": "2",
+        "IMS_DEFECTCATEGORY": "Groove Diameter UnderSize",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Turning"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Defect part produced on-19/10/2023\r\nComplaint received on-25/11/2023\r\nMachine name-CNC - 1\r\nOperator name- K.Krishna kumar"
+      },
+      "rca": {
+        "IMS_WHY": "Groove diameter measured under minimum limit.\nInsert wear not detected in-process.\nIn-process check frequency insufficient for groove feature.\nNo SPC alarm for groove diameter trend.\nTool change criterion not linked to measured diameter.",
+        "IMS_ROOTCAUSE": "Groove tool / insert wear causing undersize diameter."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Contain lot, replace groove insert, reset process, and 100% check critical groove."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Increase in-process groove checks and add tool-change trigger from SPC.",
+        "IMS_PREVENTIVEACTION": "Increase in-process groove checks and add tool-change trigger from SPC."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/20",
+    "symptom": "Nogo answering",
+    "description": "G1/4 thread plug gauge nogo answering.\r\nComplaint received on  25.11.2023 from RCPL.\r\nDefect part produced on 31.08.2023 at Precicraft Cnc works\r\nProblem Occurred in VMC no: 2nd Operation.\r\nOperator : srinivasan",
+    "part": "Cover1622 3661 00 MC",
+    "partCode": "XPACP0009MC",
+    "customer": "32000125",
+    "defectCat": "Nogo answering",
+    "lotQty": "81",
+    "defectQty": "1",
+    "recordDate": "2023-11-25",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "20",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/20",
+        "IMS_PARTY": "32000125",
+        "IMS_ITEMCODE": "XPACP0009MC",
+        "IMS_ITEMNAME": "Cover1622 3661 00 MC",
+        "IMS_DATEOFISSUE": "2023-11-25",
+        "IMS_LOTQTY": "81",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "G1/4 thread plug gauge nogo answering.\r\nComplaint received on  25.11.2023 from RCPL.\r\nDefect part produced on 31.08.2023 at Precicraft Cnc works\r\nProblem Occurred in VMC no: 2nd Operation.\r\nOperator : srinivasan"
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/21",
+    "symptom": "Nogo answering",
+    "description": "Diameter 16H9 PPG Go Not answering. Drawing Size : 16H9(0,+0.043)  Actual Value: 15.997 to 15.999mm.\r\nNote:\r\n1.Defect part produced on 25.11.2023\r\n2.Complaint received on  27.11.2023 from RCPL end .\r\n3.Customer End defect qty - 75 Nos\r\n4. Problem Occurred in  Machining Process.\r\n5.operator Name   VIJAY\r\n6. shift : All Shift (24-11-2023 Onwards)",
+    "part": "Cylinder head Z057821(K017657) MC",
+    "partCode": "SPKBP0107MC",
+    "customer": "32003379",
+    "defectCat": "Nogo answering",
+    "lotQty": "75",
+    "defectQty": "5",
+    "recordDate": "2023-11-27",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "21",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/21",
+        "IMS_PARTY": "32003379",
+        "IMS_ITEMCODE": "SPKBP0107MC",
+        "IMS_ITEMNAME": "Cylinder head Z057821(K017657) MC",
+        "IMS_DATEOFISSUE": "2023-11-27",
+        "IMS_LOTQTY": "75",
+        "IMS_DEFECTQTY": "5",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Diameter 16H9 PPG Go Not answering. Drawing Size : 16H9(0,+0.043)  Actual Value: 15.997 to 15.999mm.\r\nNote:\r\n1.Defect part produced on 25.11.2023\r\n2.Complaint received on  27.11.2023 from RCPL end .\r\n3.Customer End defect qty - 75 Nos\r\n4. Problem Occurred in  Machining Process.\r\n5.operator Name   VIJAY\r\n6. shift : All Shift (24-11-2023 Onwards)"
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/22",
+    "symptom": "Dia Over Size",
+    "description": "Housing 909430-Ø32+0.039 bore oversize observed in rcpl inward  27.11.2023 the part produced on 25.11.2023 operator murugesan 22.11.2023 on VMC-02",
+    "part": "Housing 1622909430 MC",
+    "partCode": "XGACP0051MC",
+    "customer": "32001375",
+    "defectCat": "Dia Over Size",
+    "lotQty": "25",
+    "defectQty": "1",
+    "recordDate": "2023-11-27",
+    "rootCause": "Tool wear / incorrect offset caused Dia Over Size on Housing 1622909430 MC.",
+    "whyWhy": [
+      "Observed Dia Over Size against drawing specification.",
+      "Cutting tool / insert condition drifted beyond process window.",
+      "Tool life / offset verification not enforced at set frequency.",
+      "Process control plan missing hard stop for diameter check.",
+      "Standard work for tool change & first-piece approval incomplete."
+    ],
+    "correctiveAction": "Quarantine affected lot, rework/sort Housing 1622909430 MC, reset tool offset, and re-verify first article.",
+    "preventiveAction": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+    "severity": "Major",
+    "process": "Machining / Threading",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "22",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/22",
+        "IMS_PARTY": "32001375",
+        "IMS_ITEMCODE": "XGACP0051MC",
+        "IMS_ITEMNAME": "Housing 1622909430 MC",
+        "IMS_DATEOFISSUE": "2023-11-27",
+        "IMS_LOTQTY": "25",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Dia Over Size",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Threading"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Housing 909430-Ø32+0.039 bore oversize observed in rcpl inward  27.11.2023 the part produced on 25.11.2023 operator murugesan 22.11.2023 on VMC-02"
+      },
+      "rca": {
+        "IMS_WHY": "Observed Dia Over Size against drawing specification.\nCutting tool / insert condition drifted beyond process window.\nTool life / offset verification not enforced at set frequency.\nProcess control plan missing hard stop for diameter check.\nStandard work for tool change & first-piece approval incomplete.",
+        "IMS_ROOTCAUSE": "Tool wear / incorrect offset caused Dia Over Size on Housing 1622909430 MC."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine affected lot, rework/sort Housing 1622909430 MC, reset tool offset, and re-verify first article."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+        "IMS_PREVENTIVEACTION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/23",
+    "symptom": "loose burr",
+    "description": "Housing Therm  deburring process not done properly in the final inspection area Name Mr. Rajkumar complaint received  28.11.2023",
+    "part": "Housing Therm 1638502200 MC",
+    "partCode": "XGACP0056MC",
+    "customer": "32000263",
+    "defectCat": "loose burr",
+    "lotQty": "36",
+    "defectQty": "3",
+    "recordDate": "2023-11-28",
+    "rootCause": "Deburr operation incomplete — residual burr on Housing Therm 1638502200 MC.",
+    "whyWhy": [
+      "Customer found loose / unremoved machining burr.",
+      "Deburr station skipped or incompletely performed.",
+      "No poka-yoke / visual standard at end of line.",
+      "Operator training / work instruction for burr removal weak.",
+      "Final inspection sampling did not cover burr critical zones."
+    ],
+    "correctiveAction": "Contain lot, 100% sort for burr, retrain operators, and re-inspect before ship.",
+    "preventiveAction": "Add deburr check fixture / visual board and include burr zones in outgoing QC checklist.",
+    "severity": "Major",
+    "process": "Machining / Deburr",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "23",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/23",
+        "IMS_PARTY": "32000263",
+        "IMS_ITEMCODE": "XGACP0056MC",
+        "IMS_ITEMNAME": "Housing Therm 1638502200 MC",
+        "IMS_DATEOFISSUE": "2023-11-28",
+        "IMS_LOTQTY": "36",
+        "IMS_DEFECTQTY": "3",
+        "IMS_DEFECTCATEGORY": "loose burr",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Deburr"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Housing Therm  deburring process not done properly in the final inspection area Name Mr. Rajkumar complaint received  28.11.2023"
+      },
+      "rca": {
+        "IMS_WHY": "Customer found loose / unremoved machining burr.\nDeburr station skipped or incompletely performed.\nNo poka-yoke / visual standard at end of line.\nOperator training / work instruction for burr removal weak.\nFinal inspection sampling did not cover burr critical zones.",
+        "IMS_ROOTCAUSE": "Deburr operation incomplete — residual burr on Housing Therm 1638502200 MC."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Contain lot, 100% sort for burr, retrain operators, and re-inspect before ship."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Add deburr check fixture / visual board and include burr zones in outgoing QC checklist.",
+        "IMS_PREVENTIVEACTION": "Add deburr check fixture / visual board and include burr zones in outgoing QC checklist."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/24",
+    "symptom": "Nogo answering",
+    "description": "1/4-19 + 0.002 BSP Thread Plug Gauge Go not answering issue observed in 05 No’s during inward inspection at RCPL end, which were produced at HPED in VMC-10 by operators ( R.Akash , M.Manikandan).",
+    "part": "Mpt40BottomCap-BPorted756242051 GM MC",
+    "partCode": "XPPHP0009MC",
+    "customer": "31000005",
+    "defectCat": "Nogo answering",
+    "lotQty": "565",
+    "defectQty": "5",
+    "recordDate": "2023-11-24",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "24",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/24",
+        "IMS_PARTY": "31000005",
+        "IMS_ITEMCODE": "XPPHP0009MC",
+        "IMS_ITEMNAME": "Mpt40BottomCap-BPorted756242051 GM MC",
+        "IMS_DATEOFISSUE": "2023-11-24",
+        "IMS_LOTQTY": "565",
+        "IMS_DEFECTQTY": "5",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "1/4-19 + 0.002 BSP Thread Plug Gauge Go not answering issue observed in 05 No’s during inward inspection at RCPL end, which were produced at HPED in VMC-10 by operators ( R.Akash , M.Manikandan)."
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/25",
+    "symptom": "Nogo answering",
+    "description": "Housing 1622909430 - G1 tpg go not answering observed in rcpl inward  27.11.2023 the part produced on 25.11.2023 operator Murugesan 22.11.2023 on VMC-02",
+    "part": "Housing 1622909430 MC",
+    "partCode": "XGACP0051MC",
+    "customer": "32001375",
+    "defectCat": "Nogo answering",
+    "lotQty": "25",
+    "defectQty": "2",
+    "recordDate": "2023-11-27",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "25",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/25",
+        "IMS_PARTY": "32001375",
+        "IMS_ITEMCODE": "XGACP0051MC",
+        "IMS_ITEMNAME": "Housing 1622909430 MC",
+        "IMS_DATEOFISSUE": "2023-11-27",
+        "IMS_LOTQTY": "25",
+        "IMS_DEFECTQTY": "2",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Housing 1622909430 - G1 tpg go not answering observed in rcpl inward  27.11.2023 the part produced on 25.11.2023 operator Murugesan 22.11.2023 on VMC-02"
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/26",
+    "symptom": "Line_Scattering mark",
+    "description": "Dia 12.40mm and 8EF7 Bore & face area line mark observed in SV1 Body (Z227089)K 172549.\r\nMachine Name : 02\r\nMachine Operator Name :Kannu Sahu & Prasanth Naik\r\nPart Produced Date :25/11/2023 & 27/11/2023\r\nTotal Produced Qty :231 Nos (Ok 90 Nos & Not Ok 3 Nos)\r\nIssue Date :28/11/2023 (From Customer End)\r\nIssue lot Qty :141 Nos  ( Ok 90Nos & Not Ok 51 Nos)",
+    "part": "SV1 Body (Z227089)K172549 MC",
+    "partCode": "SPKBP0039MC",
+    "customer": "32003488",
+    "defectCat": "Line_Scattering mark",
+    "lotQty": "1462",
+    "defectQty": "203",
+    "recordDate": "2023-12-04",
+    "rootCause": "Handling / process contact causing scattering / line marks.",
+    "whyWhy": [
+      "Line scattering marks found on finished surface.",
+      "Part contacted dirty / damaged fixture or conveyor.",
+      "Handling protection / tray condition not controlled.",
+      "Visual standard for mark acceptance unclear.",
+      "No periodic fixture / tray cleanliness audit."
+    ],
+    "correctiveAction": "Isolate marked parts, clean/replace contact surfaces, and re-inspect appearance.",
+    "preventiveAction": "Protective trays, fixture condition checklist, and clearer visual acceptance standard.",
+    "severity": "Minor",
+    "process": "Finishing / Handling",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "26",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/26",
+        "IMS_PARTY": "32003488",
+        "IMS_ITEMCODE": "SPKBP0039MC",
+        "IMS_ITEMNAME": "SV1 Body (Z227089)K172549 MC",
+        "IMS_DATEOFISSUE": "2023-12-04",
+        "IMS_LOTQTY": "1462",
+        "IMS_DEFECTQTY": "203",
+        "IMS_DEFECTCATEGORY": "Line_Scattering mark",
+        "IMS_SEVERITY": "Minor",
+        "IMS_PROCESS": "Finishing / Handling"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Dia 12.40mm and 8EF7 Bore & face area line mark observed in SV1 Body (Z227089)K 172549.\r\nMachine Name : 02\r\nMachine Operator Name :Kannu Sahu & Prasanth Naik\r\nPart Produced Date :25/11/2023 & 27/11/2023\r\nTotal Produced Qty :231 Nos (Ok 90 Nos & Not Ok 3 Nos)\r\nIssue Date :28/11/2023 (From Customer End)\r\nIssue lot Qty :141 Nos  ( Ok 90Nos & Not Ok 51 Nos)"
+      },
+      "rca": {
+        "IMS_WHY": "Line scattering marks found on finished surface.\nPart contacted dirty / damaged fixture or conveyor.\nHandling protection / tray condition not controlled.\nVisual standard for mark acceptance unclear.\nNo periodic fixture / tray cleanliness audit.",
+        "IMS_ROOTCAUSE": "Handling / process contact causing scattering / line marks."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Isolate marked parts, clean/replace contact surfaces, and re-inspect appearance."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Protective trays, fixture condition checklist, and clearer visual acceptance standard.",
+        "IMS_PREVENTIVEACTION": "Protective trays, fixture condition checklist, and clearer visual acceptance standard."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/27",
+    "symptom": "Ovality",
+    "description": "M8 M6 M10 Thread ovality complaint received from RCPL 04.12.23 . produced on 01.12.23 machine : VMC02 Operator: Abinesh kumar .",
+    "part": "Thermostat housing 23040849(23004555) IM",
+    "partCode": "SPVEC0016IM",
+    "customer": "32001850",
+    "defectCat": "Ovality",
+    "lotQty": "672",
+    "defectQty": "1",
+    "recordDate": "2023-12-04",
+    "rootCause": "Clamping distortion or spindle runout causing ovality.",
+    "whyWhy": [
+      "Ovality beyond drawing tolerance.",
+      "Uneven clamp force / worn jaws distorted part.",
+      "Fixture condition and clamp torque not verified.",
+      "No roundness check in first-article for this feature.",
+      "Preventive maintenance on fixture insufficient."
+    ],
+    "correctiveAction": "Hold lot, rework/sort oval parts, correct clamp setup, and verify roundness.",
+    "preventiveAction": "Clamp torque standard, fixture PM, and roundness check in FAI.",
+    "severity": "Major",
+    "process": "Machining / Boring",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "27",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/27",
+        "IMS_PARTY": "32001850",
+        "IMS_ITEMCODE": "SPVEC0016IM",
+        "IMS_ITEMNAME": "Thermostat housing 23040849(23004555) IM",
+        "IMS_DATEOFISSUE": "2023-12-04",
+        "IMS_LOTQTY": "672",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Ovality",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Boring"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "M8 M6 M10 Thread ovality complaint received from RCPL 04.12.23 . produced on 01.12.23 machine : VMC02 Operator: Abinesh kumar ."
+      },
+      "rca": {
+        "IMS_WHY": "Ovality beyond drawing tolerance.\nUneven clamp force / worn jaws distorted part.\nFixture condition and clamp torque not verified.\nNo roundness check in first-article for this feature.\nPreventive maintenance on fixture insufficient.",
+        "IMS_ROOTCAUSE": "Clamping distortion or spindle runout causing ovality."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Hold lot, rework/sort oval parts, correct clamp setup, and verify roundness."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Clamp torque standard, fixture PM, and roundness check in FAI.",
+        "IMS_PREVENTIVEACTION": "Clamp torque standard, fixture PM, and roundness check in FAI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/28",
+    "symptom": "Dia Over Size",
+    "description": "Housing 909430-Ø32.0+0.039 bore oversize observed in rcpl inward 04.12.2023 the part produced on 25.11.2023 operator Murugesan on VMC-02",
+    "part": "Housing 1622909430 MC",
+    "partCode": "XGACP0051MC",
+    "customer": "32001375",
+    "defectCat": "Dia Over Size",
+    "lotQty": "25",
+    "defectQty": "1",
+    "recordDate": "2023-12-04",
+    "rootCause": "Tool wear / incorrect offset caused Dia Over Size on Housing 1622909430 MC.",
+    "whyWhy": [
+      "Observed Dia Over Size against drawing specification.",
+      "Cutting tool / insert condition drifted beyond process window.",
+      "Tool life / offset verification not enforced at set frequency.",
+      "Process control plan missing hard stop for diameter check.",
+      "Standard work for tool change & first-piece approval incomplete."
+    ],
+    "correctiveAction": "Quarantine affected lot, rework/sort Housing 1622909430 MC, reset tool offset, and re-verify first article.",
+    "preventiveAction": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+    "severity": "Major",
+    "process": "Machining / Threading",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "28",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/28",
+        "IMS_PARTY": "32001375",
+        "IMS_ITEMCODE": "XGACP0051MC",
+        "IMS_ITEMNAME": "Housing 1622909430 MC",
+        "IMS_DATEOFISSUE": "2023-12-04",
+        "IMS_LOTQTY": "25",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Dia Over Size",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Threading"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Housing 909430-Ø32.0+0.039 bore oversize observed in rcpl inward 04.12.2023 the part produced on 25.11.2023 operator Murugesan on VMC-02"
+      },
+      "rca": {
+        "IMS_WHY": "Observed Dia Over Size against drawing specification.\nCutting tool / insert condition drifted beyond process window.\nTool life / offset verification not enforced at set frequency.\nProcess control plan missing hard stop for diameter check.\nStandard work for tool change & first-piece approval incomplete.",
+        "IMS_ROOTCAUSE": "Tool wear / incorrect offset caused Dia Over Size on Housing 1622909430 MC."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine affected lot, rework/sort Housing 1622909430 MC, reset tool offset, and re-verify first article."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan.",
+        "IMS_PREVENTIVEACTION": "Add tool-life counter, first-piece diameter gate, and periodic offset audit in control plan."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/29",
+    "symptom": "Nogo answering",
+    "description": "G1/4 tpg  gonot answering Observed on Rcpl inward 04.12.2023 part produced on 25.11.2023 operator Murugesan  on VMC-02.",
+    "part": "Housing 1622909430 MC",
+    "partCode": "XGACP0051MC",
+    "customer": "32001375",
+    "defectCat": "Nogo answering",
+    "lotQty": "25",
+    "defectQty": "2",
+    "recordDate": "2023-12-04",
+    "rootCause": "NOGO gauge acceptance due to worn gauge or incorrect gauging method.",
+    "whyWhy": [
+      "Part accepted though NOGO condition existed.",
+      "Gauge wear / calibration interval exceeded.",
+      "Inspection method not validated for this feature.",
+      "No gauge R&R / daily check board at station.",
+      "Incoming / in-process gauge control weak."
+    ],
+    "correctiveAction": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors.",
+    "preventiveAction": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+    "severity": "Major",
+    "process": "Inspection / Gauging",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "29",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/29",
+        "IMS_PARTY": "32001375",
+        "IMS_ITEMCODE": "XGACP0051MC",
+        "IMS_ITEMNAME": "Housing 1622909430 MC",
+        "IMS_DATEOFISSUE": "2023-12-04",
+        "IMS_LOTQTY": "25",
+        "IMS_DEFECTQTY": "2",
+        "IMS_DEFECTCATEGORY": "Nogo answering",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Inspection / Gauging"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "G1/4 tpg  gonot answering Observed on Rcpl inward 04.12.2023 part produced on 25.11.2023 operator Murugesan  on VMC-02."
+      },
+      "rca": {
+        "IMS_WHY": "Part accepted though NOGO condition existed.\nGauge wear / calibration interval exceeded.\nInspection method not validated for this feature.\nNo gauge R&R / daily check board at station.\nIncoming / in-process gauge control weak.",
+        "IMS_ROOTCAUSE": "NOGO gauge acceptance due to worn gauge or incorrect gauging method."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Quarantine lot, re-gauge with calibrated master, replace worn NOGO, and retrain inspectors."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily gauge check board, calibration recall system, and revised inspection WI.",
+        "IMS_PREVENTIVEACTION": "Daily gauge check board, calibration recall system, and revised inspection WI."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/30",
+    "symptom": "Operation Missing",
+    "description": "1.M6 Thread operation missing(3X),2)Dia8.50mm and Dia8.20mm hole operation missing.,3)75-0.1mm Face operation missing on 05.12.2023 from RCPL.\r\n2.Customer Defect Qty - 1 No\r\n3.Defect part produced on 01.12.2023 at Glomith Engineers Problem Occurred in VMC drilling process.\r\n4.Operator Name - Radhakrishnan, Shift-1st",
+    "part": "Mahle housing 45422348 MC",
+    "partCode": "XPLTR0002MC",
+    "customer": "32003116",
+    "defectCat": "Operation Missing",
+    "lotQty": "447",
+    "defectQty": "1",
+    "recordDate": "2023-12-06",
+    "rootCause": "Process step skipped for Mahle housing 45422348 MC due to routing / traveler gap.",
+    "whyWhy": [
+      "Operation found missing on Mahle housing 45422348 MC.",
+      "Traveler / routing did not force completion gate.",
+      "Previous station released parts without confirmation.",
+      "No barcode / scan validation for mandatory ops.",
+      "Control plan did not define hard stop before packing."
+    ],
+    "correctiveAction": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect.",
+    "preventiveAction": "Enforce scan-based operation completion and add missing-op check before FG release.",
+    "severity": "Critical",
+    "process": "Routing / Assembly",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "30",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/30",
+        "IMS_PARTY": "32003116",
+        "IMS_ITEMCODE": "XPLTR0002MC",
+        "IMS_ITEMNAME": "Mahle housing 45422348 MC",
+        "IMS_DATEOFISSUE": "2023-12-06",
+        "IMS_LOTQTY": "447",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Operation Missing",
+        "IMS_SEVERITY": "Critical",
+        "IMS_PROCESS": "Routing / Assembly"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "1.M6 Thread operation missing(3X),2)Dia8.50mm and Dia8.20mm hole operation missing.,3)75-0.1mm Face operation missing on 05.12.2023 from RCPL.\r\n2.Customer Defect Qty - 1 No\r\n3.Defect part produced on 01.12.2023 at Glomith Engineers Problem Occurred in VMC drilling process.\r\n4.Operator Name - Radhakrishnan, Shift-1st"
+      },
+      "rca": {
+        "IMS_WHY": "Operation found missing on Mahle housing 45422348 MC.\nTraveler / routing did not force completion gate.\nPrevious station released parts without confirmation.\nNo barcode / scan validation for mandatory ops.\nControl plan did not define hard stop before packing.",
+        "IMS_ROOTCAUSE": "Process step skipped for Mahle housing 45422348 MC due to routing / traveler gap."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Enforce scan-based operation completion and add missing-op check before FG release.",
+        "IMS_PREVENTIVEACTION": "Enforce scan-based operation completion and add missing-op check before FG release."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/31",
+    "symptom": "unwash",
+    "description": "1.Machined Surface area unwash observed on 05.12.2023 from RCPL\r\n2.Defect Qty - 1no\r\n3.Defect part produced on 02.12.2023 at Glomith Engineers problem occurred in CNC Turning Process\r\n4.Operator Name - Arunkumar Shift-2nd",
+    "part": "Mahle housing 45422348 MC",
+    "partCode": "XPLTR0002MC",
+    "customer": "32003116",
+    "defectCat": "unwash",
+    "lotQty": "447",
+    "defectQty": "1",
+    "recordDate": "2023-12-06",
+    "rootCause": "Wash process ineffective — residue left on part.",
+    "whyWhy": [
+      "Unwashed / contaminated surface observed.",
+      "Wash cycle parameters or chemistry out of range.",
+      "Washer maintenance / concentration check missed.",
+      "No outgoing cleanliness verification for critical zones.",
+      "Work instruction for wash load density incomplete."
+    ],
+    "correctiveAction": "Re-wash affected parts, correct wash parameters, and re-inspect cleanliness.",
+    "preventiveAction": "Daily wash chemistry check and cleanliness gate before packing.",
+    "severity": "Minor",
+    "process": "Washing / Cleaning",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "31",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/31",
+        "IMS_PARTY": "32003116",
+        "IMS_ITEMCODE": "XPLTR0002MC",
+        "IMS_ITEMNAME": "Mahle housing 45422348 MC",
+        "IMS_DATEOFISSUE": "2023-12-06",
+        "IMS_LOTQTY": "447",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "unwash",
+        "IMS_SEVERITY": "Minor",
+        "IMS_PROCESS": "Washing / Cleaning"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "1.Machined Surface area unwash observed on 05.12.2023 from RCPL\r\n2.Defect Qty - 1no\r\n3.Defect part produced on 02.12.2023 at Glomith Engineers problem occurred in CNC Turning Process\r\n4.Operator Name - Arunkumar Shift-2nd"
+      },
+      "rca": {
+        "IMS_WHY": "Unwashed / contaminated surface observed.\nWash cycle parameters or chemistry out of range.\nWasher maintenance / concentration check missed.\nNo outgoing cleanliness verification for critical zones.\nWork instruction for wash load density incomplete.",
+        "IMS_ROOTCAUSE": "Wash process ineffective — residue left on part."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Re-wash affected parts, correct wash parameters, and re-inspect cleanliness."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Daily wash chemistry check and cleanliness gate before packing.",
+        "IMS_PREVENTIVEACTION": "Daily wash chemistry check and cleanliness gate before packing."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/32",
+    "symptom": "Line_Scattering mark",
+    "description": "Machined surface area line mark observed on Governor Housing 1st Operation in CNC-03 produced dt: 06.12.2023 complaint dt 06.12.2023, Operator Name: I.Sundar Defect qty 118 nos",
+    "part": "Governor Housing 1 425 121 056 LT",
+    "partCode": "SPBBP0012LT",
+    "customer": "32000309",
+    "defectCat": "Line_Scattering mark",
+    "lotQty": "2381",
+    "defectQty": "94",
+    "recordDate": "2023-12-06",
+    "rootCause": "Handling / process contact causing scattering / line marks.",
+    "whyWhy": [
+      "Line scattering marks found on finished surface.",
+      "Part contacted dirty / damaged fixture or conveyor.",
+      "Handling protection / tray condition not controlled.",
+      "Visual standard for mark acceptance unclear.",
+      "No periodic fixture / tray cleanliness audit."
+    ],
+    "correctiveAction": "Isolate marked parts, clean/replace contact surfaces, and re-inspect appearance.",
+    "preventiveAction": "Protective trays, fixture condition checklist, and clearer visual acceptance standard.",
+    "severity": "Minor",
+    "process": "Finishing / Handling",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "32",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/32",
+        "IMS_PARTY": "32000309",
+        "IMS_ITEMCODE": "SPBBP0012LT",
+        "IMS_ITEMNAME": "Governor Housing 1 425 121 056 LT",
+        "IMS_DATEOFISSUE": "2023-12-06",
+        "IMS_LOTQTY": "2381",
+        "IMS_DEFECTQTY": "94",
+        "IMS_DEFECTCATEGORY": "Line_Scattering mark",
+        "IMS_SEVERITY": "Minor",
+        "IMS_PROCESS": "Finishing / Handling"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Machined surface area line mark observed on Governor Housing 1st Operation in CNC-03 produced dt: 06.12.2023 complaint dt 06.12.2023, Operator Name: I.Sundar Defect qty 118 nos"
+      },
+      "rca": {
+        "IMS_WHY": "Line scattering marks found on finished surface.\nPart contacted dirty / damaged fixture or conveyor.\nHandling protection / tray condition not controlled.\nVisual standard for mark acceptance unclear.\nNo periodic fixture / tray cleanliness audit.",
+        "IMS_ROOTCAUSE": "Handling / process contact causing scattering / line marks."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Isolate marked parts, clean/replace contact surfaces, and re-inspect appearance."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Protective trays, fixture condition checklist, and clearer visual acceptance standard.",
+        "IMS_PREVENTIVEACTION": "Protective trays, fixture condition checklist, and clearer visual acceptance standard."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/34",
+    "symptom": "Dimension Problem",
+    "description": "Flatness not ok.,Specification(0.10mm),Actual (0.15mm feeler gauge answering) in EGR Connecting pipe - 24340573\r\nDefect part produced on - 04/12/2023.\r\nComplaint received on - 09/12/2023.\r\nMachine name - VMC -06.\r\nOperator name - R.Anish.",
+    "part": "EGR Connecting Pipe 24340573 MC",
+    "partCode": "SGVEC0018MC",
+    "customer": "32000250",
+    "defectCat": "Dimension Problem",
+    "lotQty": "240",
+    "defectQty": "2",
+    "recordDate": "2023-12-09",
+    "rootCause": "Process capability / measurement gap leading to dimension issue on EGR Connecting Pipe 24340573 MC.",
+    "whyWhy": [
+      "Dimension problem detected: Flatness not ok.,Specification(0.10mm),Actual (0.15mm feeler gauge answering) in EGR Connecting pipe - 24340573\r\nDefect",
+      "Process setting drifted from validated condition.",
+      "In-process measurement did not catch drift early.",
+      "Control limits / reaction plan not followed.",
+      "Capability monitoring for this CTQ incomplete."
+    ],
+    "correctiveAction": "Contain lot, re-measure CTQ, correct process setting, and sort nonconforming parts.",
+    "preventiveAction": "Strengthen SPC for CTQ dimensions and document reaction plan at the station.",
+    "severity": "Major",
+    "process": "Machining / Inspection",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "34",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/34",
+        "IMS_PARTY": "32000250",
+        "IMS_ITEMCODE": "SGVEC0018MC",
+        "IMS_ITEMNAME": "EGR Connecting Pipe 24340573 MC",
+        "IMS_DATEOFISSUE": "2023-12-09",
+        "IMS_LOTQTY": "240",
+        "IMS_DEFECTQTY": "2",
+        "IMS_DEFECTCATEGORY": "Dimension Problem",
+        "IMS_SEVERITY": "Major",
+        "IMS_PROCESS": "Machining / Inspection"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "Flatness not ok.,Specification(0.10mm),Actual (0.15mm feeler gauge answering) in EGR Connecting pipe - 24340573\r\nDefect part produced on - 04/12/2023.\r\nComplaint received on - 09/12/2023.\r\nMachine name - VMC -06.\r\nOperator name - R.Anish."
+      },
+      "rca": {
+        "IMS_WHY": "Dimension problem detected: Flatness not ok.,Specification(0.10mm),Actual (0.15mm feeler gauge answering) in EGR Connecting pipe - 24340573\r\nDefect\nProcess setting drifted from validated condition.\nIn-process measurement did not catch drift early.\nControl limits / reaction plan not followed.\nCapability monitoring for this CTQ incomplete.",
+        "IMS_ROOTCAUSE": "Process capability / measurement gap leading to dimension issue on EGR Connecting Pipe 24340573 MC."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Contain lot, re-measure CTQ, correct process setting, and sort nonconforming parts."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Strengthen SPC for CTQ dimensions and document reaction plan at the station.",
+        "IMS_PREVENTIVEACTION": "Strengthen SPC for CTQ dimensions and document reaction plan at the station."
+      }
+    }
+  },
+  {
+    "id": "PROD-S/35",
+    "symptom": "Operation Missing",
+    "description": "R 2.1+0.09 Radius operation misssing in filter head E198.0112\r\nDefect part produced on - 03-12-2023\r\nComplaint received on - 09-12-2023\r\nMachine name - Vmc-2\r\nOperator name - kishore",
+    "part": "Filter head E198.0112 (43330000) LT",
+    "partCode": "SPAHC0073LT",
+    "customer": "32000250",
+    "defectCat": "Operation Missing",
+    "lotQty": "60",
+    "defectQty": "1",
+    "recordDate": "2023-12-09",
+    "rootCause": "Process step skipped for Filter head E198.0112 (43330000) LT due to routing / traveler gap.",
+    "whyWhy": [
+      "Operation found missing on Filter head E198.0112 (43330000) LT.",
+      "Traveler / routing did not force completion gate.",
+      "Previous station released parts without confirmation.",
+      "No barcode / scan validation for mandatory ops.",
+      "Control plan did not define hard stop before packing."
+    ],
+    "correctiveAction": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect.",
+    "preventiveAction": "Enforce scan-based operation completion and add missing-op check before FG release.",
+    "severity": "Critical",
+    "process": "Routing / Assembly",
+    "source": "dataset",
+    "sourceType": "Supplier",
+    "chunk": {
+      "header": {
+        "IMS_PREFIX": "PROD-S",
+        "IMS_REFNO": "35",
+        "IMS_TYPEID": 2,
+        "IMS_SUBTYPEID": 1
+      },
+      "detail": {
+        "SPN_Number": "PROD-S/35",
+        "IMS_PARTY": "32000250",
+        "IMS_ITEMCODE": "SPAHC0073LT",
+        "IMS_ITEMNAME": "Filter head E198.0112 (43330000) LT",
+        "IMS_DATEOFISSUE": "2023-12-09",
+        "IMS_LOTQTY": "60",
+        "IMS_DEFECTQTY": "1",
+        "IMS_DEFECTCATEGORY": "Operation Missing",
+        "IMS_SEVERITY": "Critical",
+        "IMS_PROCESS": "Routing / Assembly"
+      },
+      "step2": {
+        "IMS_PROBLEMSTATEMENT": "R 2.1+0.09 Radius operation misssing in filter head E198.0112\r\nDefect part produced on - 03-12-2023\r\nComplaint received on - 09-12-2023\r\nMachine name - Vmc-2\r\nOperator name - kishore"
+      },
+      "rca": {
+        "IMS_WHY": "Operation found missing on Filter head E198.0112 (43330000) LT.\nTraveler / routing did not force completion gate.\nPrevious station released parts without confirmation.\nNo barcode / scan validation for mandatory ops.\nControl plan did not define hard stop before packing.",
+        "IMS_ROOTCAUSE": "Process step skipped for Filter head E198.0112 (43330000) LT due to routing / traveler gap."
+      },
+      "ca": {
+        "IMS_CORRECTIVEACTION": "Stop shipment, identify skipped-op lots, complete missing operation, and re-inspect."
+      },
+      "pa": {
+        "IMS_ONSITEVERIFICATION": "Enforce scan-based operation completion and add missing-op check before FG release.",
+        "IMS_PREVENTIVEACTION": "Enforce scan-based operation completion and add missing-op check before FG release."
+      }
+    }
+  }
+]

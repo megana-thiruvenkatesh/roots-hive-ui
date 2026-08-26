@@ -96,11 +96,12 @@ function fallbackChunk(item = {}) {
     detail: {
       SPN_Number: item.id,
       IMS_PARTY: item.customer || item.party || '',
-      IMS_ITEMCODE: item.part || '',
+      IMS_ITEMCODE: item.partCode || item.part || '',
       IMS_ITEMNAME: item.part || item.symptom || '',
       IMS_DATEOFISSUE: item.recordDate,
       IMS_LOTQTY: item.lotQty || '',
       IMS_DEFECTQTY: item.defectQty || '',
+      IMS_DEFECTCATEGORY: item.defectCat || item.symptom || '',
       FinYear: item.recordDate ? new Date(item.recordDate).getFullYear() : '',
       PREPARED_DATETIME: item.recordDate,
       MODIFIED_DATETIME: item.recordDate,

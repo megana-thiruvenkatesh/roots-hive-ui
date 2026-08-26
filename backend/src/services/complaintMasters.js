@@ -5,18 +5,8 @@ const SETTINGS_KEY = 'complaint_masters';
 const DEFAULT_MASTERS = {
   types: ['Internal', 'Supplier'],
   severities: ['Critical', 'Major', 'Minor', 'Observation'],
-  defects: [
-    'Leakage',
-    'Porosity',
-    'Crack',
-    'Dimensional Deviation',
-    'Surface Finish',
-    'Shrinkage',
-    'Machining Issue',
-    'Material Defect',
-    'Cold Shut',
-    'Contamination',
-  ],
+  // Defects come from uploaded historic Excel — no seeded defect list.
+  defects: [],
 };
 
 function uniqueList(values) {

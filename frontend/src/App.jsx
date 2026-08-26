@@ -102,9 +102,9 @@ export default function App() {
         <Route path="config/overview" element={<Protected path="/config/overview"><Overview /></Protected>} />
         <Route path="config/modules" element={<Protected path="/config/modules"><Modules /></Protected>} />
         <Route path="config/policy" element={<Protected path="/config/policy"><PolicyConfig /></Protected>} />
-        <Route path="config/users" element={<Protected path="/config/users"><UserManagement /></Protected>} />
+        <Route path="config/users" element={<Navigate to="/settings/users" replace />} />
         <Route path="config/complaint-masters" element={<Protected path="/config/complaint-masters"><ComplaintMasters /></Protected>} />
-        <Route path="config/audit-logs" element={<Protected path="/config/audit-logs"><AuditLogs /></Protected>} />
+        <Route path="config/audit-logs" element={<Navigate to="/settings/audit-logs" replace />} />
 
         <Route path="settings" element={<SettingsLayout />}>
           <Route index element={<Navigate to="profile" replace />} />
@@ -117,6 +117,8 @@ export default function App() {
           <Route path="kb" element={<KnowledgeBase />} />
           <Route path="uploaded-data" element={<AllUploadedData />} />
           <Route path="local-folder" element={<LocalFolder />} />
+          <Route path="users" element={<Protected path="/settings/users"><UserManagement /></Protected>} />
+          <Route path="audit-logs" element={<Protected path="/settings/audit-logs"><AuditLogs /></Protected>} />
         </Route>
 
         {/* legacy redirects */}

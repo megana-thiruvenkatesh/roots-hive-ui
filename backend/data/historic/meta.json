@@ -1,0 +1,19 @@
+{
+  "originalName": "supplier-30row-with-rca-ca-pa.xlsx",
+  "uploadedAt": "2026-08-26T11:49:25.729Z",
+  "uploadedBy": "excel-seed",
+  "recordCount": 30,
+  "defectCategories": [
+    "Dia Over Size",
+    "Dimension Problem",
+    "Groove Diameter UnderSize",
+    "Housing base drive 553253001 FT",
+    "Line_Scattering mark",
+    "loose burr",
+    "Nogo answering",
+    "Offset",
+    "Operation Missing",
+    "Ovality",
+    "unwash"
+  ]
+}

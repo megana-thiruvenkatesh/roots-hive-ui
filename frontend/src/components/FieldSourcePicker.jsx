@@ -48,10 +48,12 @@ export default function FieldSourcePicker({
         }
         return { id, name, fill, item, label: `${id}${name ? ` · ${name}` : ''}` };
       })
-      .filter((entry) => entry.fill)
       .filter((entry) => {
-        if (!q) return true;
-        return entry.id.toLowerCase().includes(q) || entry.label.toLowerCase().includes(q);
+        if (!q) return Boolean(entry.fill);
+        return (
+          Boolean(entry.fill) &&
+          (entry.id.toLowerCase().includes(q) || entry.label.toLowerCase().includes(q))
+        );
       })
       .slice(0, 12);
   }, [historicMatches, query, fieldKey]);
@@ -122,12 +124,14 @@ export default function FieldSourcePicker({
             className="input"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type historic case ID / name to search…"
+            placeholder="Search historic case ID / name…"
             autoFocus
           />
           {!historicOptions.length ? (
             <p className="muted" style={{ margin: '8px 0 0' }}>
-              {query.trim() ? 'No historic case matches that ID/name.' : 'Type a historic case ID or name.'}
+              {query.trim()
+                ? 'No historic case with seed data matches that ID/name.'
+                : 'No historic seed values for this field yet. Select a matched case as reference first.'}
             </p>
           ) : (
             <div className="nc-source-list">
@@ -145,7 +149,9 @@ export default function FieldSourcePicker({
       {mode === 'ai' ? (
         <div className="nc-source-panel">
           {!aiValue ? (
-            <p className="muted" style={{ margin: 0 }}>No AI suggestion yet. Add description on step 1 to generate one.</p>
+            <p className="muted" style={{ margin: 0 }}>
+              No AI suggestion yet. Select a historic record as reference (ground truth), then Generate in AI Suggested Solution — or click AI Suggested after select to use seed data.
+            </p>
           ) : (
             <>
               <pre className="nc-source-preview">{aiValue}</pre>

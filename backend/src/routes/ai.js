@@ -87,14 +87,51 @@ router.post('/complaint-assist', async (req, res) => {
     description,
     defectCat,
     part,
+    partCode,
     message,
     mode = 'rca',
     analysisMethod = 'why-why',
     history = [],
+    groundingId,
+    grounding,
   } = req.body || {};
   try {
     const { findSimilarHistoric, buildAiSuggestion } = require('../services/typeDataSources');
-    const matches = await findSimilarHistoric(pool, { type, description, defectCat, part });
+    const { readCases, hasActiveDataset } = require('../services/historicDataset');
+
+    let matches = await findSimilarHistoric(pool, {
+      type,
+      description,
+      defectCat,
+      part,
+      partCode,
+    });
+
+    // Selected historic case is ground truth — always put it first with seed RCA/Why-Why/CA/PA.
+    const preferredId = String(groundingId || grounding?.id || '').trim();
+    if (preferredId) {
+      const fromDataset = hasActiveDataset()
+        ? readCases().find((c) => String(c.id) === preferredId)
+        : null;
+      const fromMatches = matches.find((m) => String(m.id) === preferredId);
+      const grounded = fromDataset || fromMatches || (grounding?.id ? grounding : null);
+      if (grounded) {
+        const merged = {
+          ...(fromMatches || {}),
+          ...grounded,
+          id: preferredId,
+          rootCause: grounded.rootCause || fromMatches?.rootCause || '',
+          whyWhy: Array.isArray(grounded.whyWhy) && grounded.whyWhy.length
+            ? grounded.whyWhy
+            : fromMatches?.whyWhy || [],
+          correctiveAction: grounded.correctiveAction || fromMatches?.correctiveAction || '',
+          preventiveAction: grounded.preventiveAction || fromMatches?.preventiveAction || '',
+          source: 'grounding',
+        };
+        matches = [merged, ...matches.filter((m) => String(m.id) !== preferredId)];
+      }
+    }
+
     const base = buildAiSuggestion({
       type,
       description,

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { readCases, hasActiveDataset } = require('./historicDataset');
 
 const DATA_ROOT = path.join(__dirname, '../../data');
 
@@ -162,27 +163,49 @@ async function loadDbComplaintCases(pool, type) {
   }));
 }
 
-async function findSimilarHistoric(pool, { type, description, defectCat, part }) {
-  const tokens = tokenize(description, defectCat, part);
-  if (!tokens.length) return [];
+async function findSimilarHistoric(pool, { type, description, defectCat, part, partCode }) {
+  const tokens = tokenize(description, defectCat, part, partCode);
+  const exactNeedles = [defectCat, part, partCode]
+    .map((v) => String(v || '').trim().toLowerCase())
+    .filter((v) => v.length >= 2);
 
-  const [files, kb, db] = await Promise.all([
-    Promise.resolve(loadTypeFileCases(type)),
-    loadKbCases(pool, type),
-    loadDbComplaintCases(pool, type),
-  ]);
+  // Live uploaded Excel is the only historic source when present.
+  // With no dataset, return empty — do not fall back to seed files / KB / old complaints.
+  let all = [];
+  if (hasActiveDataset()) {
+    all = readCases().map((c) => ({ ...c, source: 'dataset' }));
+  } else {
+    all = [];
+  }
 
-  const all = [...files, ...kb, ...db];
+  if (!tokens.length && !exactNeedles.length) return [];
+
   const ranked = all
     .map((item) => {
       const chunkText = item.chunk ? JSON.stringify(item.chunk) : '';
-      const score =
-        scoreText(item.description, tokens) * 2 +
-        scoreText(item.symptom, tokens) * 3 +
+      const itemCode = item.partCode || item.chunk?.detail?.IMS_ITEMCODE || '';
+      const itemName = item.part || item.chunk?.detail?.IMS_ITEMNAME || '';
+      const category = item.defectCat || item.symptom || item.chunk?.detail?.IMS_DEFECTCATEGORY || '';
+      let score =
+        scoreText(item.description, tokens) * 3 +
+        scoreText(category, tokens) * 4 +
+        scoreText(itemCode, tokens) * 5 +
+        scoreText(itemName, tokens) * 4 +
         scoreText(item.rootCause, tokens) +
         scoreText((item.whyWhy || []).join(' '), tokens) +
         scoreText(item.correctiveAction, tokens) +
-        scoreText(chunkText, tokens) * 2;
+        scoreText(chunkText, tokens);
+
+      // Strong boost for exact field hits (item code / name / defect category)
+      for (const needle of exactNeedles) {
+        if (String(itemCode).toLowerCase() === needle) score += 20;
+        else if (String(itemCode).toLowerCase().includes(needle)) score += 10;
+        if (String(itemName).toLowerCase().includes(needle)) score += 8;
+        if (String(category).toLowerCase() === needle) score += 16;
+        else if (String(category).toLowerCase().includes(needle)) score += 8;
+        if (String(item.description || '').toLowerCase().includes(needle)) score += 4;
+      }
+
       const similarityScore = Math.min(
         98,
         Math.max(35, Math.round((score / Math.max(tokens.length * 4, 1)) * 100))
@@ -191,7 +214,6 @@ async function findSimilarHistoric(pool, { type, description, defectCat, part })
     })
     .filter((i) => i.score > 0)
     .sort((a, b) => b.score - a.score)
-    // Return more results so the UI can filter and paginate client-side.
     .slice(0, 50);
 
   return ranked;

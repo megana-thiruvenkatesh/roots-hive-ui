@@ -256,6 +256,21 @@ router.get('/me', requireAuth, async (req, res) => {
   if (!rows[0]) return res.status(404).json({ error: 'User not found' });
 
   const details = rows[0].profileDetails || {};
+  let permissions = null;
+  let granted = [];
+  try {
+    const { loadStore, flattenGranted, fullAccessMap } = require('../services/roleAccess');
+    const store = await loadStore();
+    const roleKey = rows[0].role_key || req.user.roleKey;
+    permissions =
+      roleKey === 'ADMIN'
+        ? fullAccessMap()
+        : store.permissions[roleKey] || null;
+    granted = flattenGranted(permissions || {});
+  } catch (err) {
+    console.warn('role access attach failed', err.message);
+  }
+
   const userObj = {
     ...publicUser(rows[0]),
     employeeId: rows[0].employeeId,
@@ -265,6 +280,8 @@ router.get('/me', requireAuth, async (req, res) => {
     clearance: rows[0].clearance,
     lastLoginAt: rows[0].lastLoginAt,
     profile: details,
+    permissions,
+    granted,
   };
   res.json({ user: userObj });
 });

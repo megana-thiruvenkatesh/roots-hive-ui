@@ -19,6 +19,17 @@ router.use(requireAuth);
 router.get('/', async (_req, res) => {
   try {
     const masters = await loadComplaintMasters();
+    try {
+      const { readCases, uniqueDefectCategories, hasActiveDataset } = require('../services/historicDataset');
+      if (hasActiveDataset()) {
+        const fromData = uniqueDefectCategories(readCases());
+        masters.defects = Array.from(new Set([...(fromData || []), ...(masters.defects || [])])).sort((a, b) =>
+          a.localeCompare(b)
+        );
+      }
+    } catch {
+      /* optional */
+    }
     res.json({ masters });
   } catch (e) {
     console.error(e);
