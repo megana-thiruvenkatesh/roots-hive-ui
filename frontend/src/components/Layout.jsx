@@ -230,6 +230,8 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const moduleKey = activeModule(location.pathname);
+
+  // Hover expands; leave collapses. Pin (›/‹) keeps it open.
   const [pinnedOpen, setPinnedOpen] = useState(false);
   const [hovering, setHovering] = useState(false);
   const leaveTimer = useRef(null);
@@ -276,7 +278,7 @@ export default function Layout() {
           setHovering(true);
         }}
         onMouseLeave={() => {
-          leaveTimer.current = setTimeout(() => setHovering(false), 140);
+          leaveTimer.current = setTimeout(() => setHovering(false), 160);
         }}
       >
         <div className="rail-header">
@@ -291,17 +293,20 @@ export default function Layout() {
                 style={{ width: 26, height: 26, objectFit: 'contain' }}
               />
             </div>
-            {!collapsed && (
+            {!collapsed ? (
               <div className="rail-brand-text">
                 <strong style={{ fontSize: '0.88rem', whiteSpace: 'nowrap' }}>Hive AI</strong>
               </div>
-            )}
+            ) : null}
           </div>
           <button
             type="button"
             className="rail-collapse"
-            onClick={() => setPinnedOpen((v) => !v)}
-            title={pinnedOpen ? 'Auto-minimize sidebar' : 'Keep sidebar open'}
+            onClick={(e) => {
+              e.stopPropagation();
+              setPinnedOpen((v) => !v);
+            }}
+            title={pinnedOpen ? 'Unpin — auto-minimize when mouse leaves' : 'Pin sidebar open'}
           >
             {pinnedOpen ? '‹' : '›'}
           </button>
@@ -323,7 +328,7 @@ export default function Layout() {
                 >
                   <span className="rail-item-main">
                     {ICONS[item.key]}
-                    {!collapsed && <span className="rail-label">{item.label}</span>}
+                    {!collapsed ? <span className="rail-label">{item.label}</span> : null}
                     {item.key === 'complaints' && unread > 0 ? (
                       <span className="rail-unread-badge" title={`${unread} unread`}>
                         {unread > 99 ? '99+' : unread}
