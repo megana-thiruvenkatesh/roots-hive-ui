@@ -6432,8 +6432,13 @@ form.nc-card {
 .ai-guide-actions-footer .ai-guide-primary,
 .ai-guide-actions-footer .ai-guide-secondary {
   width: 100%;
+  min-width: 0;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  font-size: 9.5px;
+  padding: 8px 4px;
+  line-height: 1.2;
 }
 .ai-guide-panel-actions {
   min-height: 0;
