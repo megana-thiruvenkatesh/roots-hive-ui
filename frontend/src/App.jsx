@@ -16,10 +16,8 @@ import RcaPrediction from './pages/ai-engine/RcaPrediction.jsx';
 import WhyWhyGenerator from './pages/ai-engine/WhyWhyGenerator.jsx';
 import CaRecommendation from './pages/ai-engine/CaRecommendation.jsx';
 import AuditLogs from './pages/config/AuditLogs.jsx';
-import ComplaintMasters from './pages/config/ComplaintMasters.jsx';
 import PolicyConfig from './pages/config/PolicyConfig.jsx';
 import Overview from './pages/config/Overview.jsx';
-import Modules from './pages/config/Modules.jsx';
 import UserManagement from './pages/config/UserManagement.jsx';
 import SettingsLayout from './pages/settings/SettingsLayout.jsx';
 import MyProfile from './pages/settings/MyProfile.jsx';
@@ -100,10 +98,10 @@ export default function App() {
 
         <Route path="config" element={<Navigate to="/config/overview" replace />} />
         <Route path="config/overview" element={<Protected path="/config/overview"><Overview /></Protected>} />
-        <Route path="config/modules" element={<Protected path="/config/modules"><Modules /></Protected>} />
+        <Route path="config/modules" element={<Navigate to="/config/overview" replace />} />
         <Route path="config/policy" element={<Protected path="/config/policy"><PolicyConfig /></Protected>} />
         <Route path="config/users" element={<Navigate to="/settings/users" replace />} />
-        <Route path="config/complaint-masters" element={<Protected path="/config/complaint-masters"><ComplaintMasters /></Protected>} />
+        <Route path="config/complaint-masters" element={<Navigate to="/config/overview" replace />} />
         <Route path="config/audit-logs" element={<Navigate to="/settings/audit-logs" replace />} />
 
         <Route path="settings" element={<SettingsLayout />}>

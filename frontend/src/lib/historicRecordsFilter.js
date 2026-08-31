@@ -112,7 +112,7 @@ export function applyHistoricRecordsFilters(matches = [], filters = {}) {
   return matches.filter((m) => {
     if (!matchesDateFilter(m, filters)) return false;
 
-    if (minSim != null) {
+    if (minSim != null && minSim > 0) {
       const sim = toNumberOrNull(m?.similarityScore);
       if (sim == null || sim < minSim) return false;
     }

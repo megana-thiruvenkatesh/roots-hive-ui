@@ -67,6 +67,7 @@ export default function AiGuidedSolution({
   busy,
   onGenerate,
   onApplyToForm,
+  onNotify,
 }) {
   const [step, setStep] = useState(1);
   const [whyEntries, setWhyEntries] = useState([]);
@@ -103,8 +104,10 @@ export default function AiGuidedSolution({
       setFinalCa(caSeed || '');
       setFinalPa(paSeed || '');
       setStep(2);
+      notify(`AI suggestions generated from ${grounding.id}`, 'success');
     } catch (err) {
       setError(err.message || 'Failed to generate AI suggestions');
+      notify(err.message || 'Failed to generate AI suggestions', 'error');
     }
   }
 
@@ -114,19 +117,33 @@ export default function AiGuidedSolution({
     );
   }
 
+  function notify(message, tone = 'info') {
+    if (!message) return;
+    onNotify?.(message, tone);
+  }
+
   function confirmAnalysis() {
     const last = whyEntries[whyEntries.length - 1]?.answer?.trim();
+    const confirmed = last || rootCause;
     if (last) setRootCause(last);
+    if (confirmed) {
+      const preview = confirmed.length > 100 ? `${confirmed.slice(0, 100)}…` : confirmed;
+      notify(`Root cause confirmed: ${preview}`, 'success');
+    } else {
+      notify('Analysis confirmed — generate corrective and preventive actions', 'success');
+    }
     setStep(3);
   }
 
   function saveToForm() {
-    onApplyToForm?.({
+    const payload = {
       rootCause: rootCause || whyEntries[whyEntries.length - 1]?.answer || '',
       whyWhyText: whyEntries.map((entry) => entry.answer).filter(Boolean).join('\n'),
       correctiveAction: finalCa || caOptions[selectedCa] || '',
       preventiveAction: finalPa || paOptions[selectedPa] || '',
-    });
+    };
+    onApplyToForm?.(payload);
+    notify('Resolution draft saved to Complaint Details', 'success');
   }
 
   const groundingLabel = grounding?.id || null;
@@ -152,137 +169,147 @@ export default function AiGuidedSolution({
 
       <div className="ai-guide-stage">
         {step === 1 ? (
-          <div className="ai-guide-panel">
-            <h3>Generate grounded AI Suggestions</h3>
-            <p className="ai-guide-copy">
-              First select one retrieved historical case as ground truth. Its seeded Why-Why, root cause, CA, and PA drive Card 1 suggestions and this AI draft.
-            </p>
-            {groundingLabel ? (
-              <div className="ai-guide-grounding ready">
-                <div>
-                  <strong>{groundingLabel}</strong>
-                  <span>Selected historical grounding case</span>
+          <div className="ai-guide-panel ai-guide-panel-sticky">
+            <div className="ai-guide-panel-scroll">
+              <h3>Generate Grounded AI Suggestions</h3>
+              <p className="ai-guide-copy">
+                First select one retrieved historical case as ground truth. Its seeded Why-Why, root cause, CA, and PA drive Card 1 suggestions and this AI draft.
+              </p>
+              {groundingLabel ? (
+                <div className="ai-guide-grounding ready">
+                  <div>
+                    <strong>{groundingLabel}</strong>
+                    <span>Selected historical grounding case</span>
+                  </div>
+                  <em>Ready</em>
                 </div>
-                <em>Ready</em>
-              </div>
-            ) : (
-              <div className="ai-guide-grounding">
-                <div>
-                  <strong>No historical case selected</strong>
-                  <span>Use Select as reference on a historic card.</span>
+              ) : (
+                <div className="ai-guide-grounding">
+                  <div>
+                    <strong>No historical case selected</strong>
+                    <span>Use Select as reference on a historic card.</span>
+                  </div>
+                  <em className="req">Required</em>
                 </div>
-                <em className="req">Required</em>
-              </div>
-            )}
-            {error ? <p className="ai-guide-error">{error}</p> : null}
-            <button type="button" className="ai-guide-primary" disabled={busy || !grounding?.id || !onGenerate} onClick={handleGenerate}>
-              {busy ? 'Generating…' : 'Generate AI Suggestions'}
-            </button>
+              )}
+              {error ? <p className="ai-guide-error">{error}</p> : null}
+            </div>
+            <div className="ai-guide-actions-footer ai-guide-actions-footer-single">
+              <button type="button" className="ai-guide-primary" disabled={busy || !grounding?.id || !onGenerate} onClick={handleGenerate}>
+                {busy ? 'Generating…' : 'Generate AI Suggestions'}
+              </button>
+            </div>
           </div>
         ) : null}
 
         {step === 2 ? (
-          <div className="ai-guide-panel">
-            <div className="ai-guide-review-head">
-              <h3>Complete Occurrence analysis</h3>
-              <span className="ai-guide-depth">{depth} dynamic levels</span>
-            </div>
-            <p className="ai-guide-copy">
-              {groundingLabel ? `Grounded in ${groundingLabel}. ` : ''}
-              The wording describes how the defect was created in the process.
-            </p>
-            <div className="ai-why-chain">
-              {whyEntries.map((entry, index) => (
-                <div key={`why-${index}`} className="ai-why-step">
-                  <div className="ai-why-num">{index + 1}</div>
-                  <div className="ai-why-fields">
-                    <label>Why question</label>
-                    <textarea
-                      className="input"
-                      rows={2}
-                      value={entry.question}
-                      onChange={(e) => updateWhy(index, 'question', e.target.value)}
-                    />
-                    <label>Answer</label>
-                    <textarea
-                      className="input"
-                      rows={2}
-                      value={entry.answer}
-                      onChange={(e) => updateWhy(index, 'answer', e.target.value)}
-                    />
+          <div className="ai-guide-panel ai-guide-panel-sticky">
+            <div className="ai-guide-panel-scroll">
+              <div className="ai-guide-review-head">
+                <h3>Complete Occurrence Analysis</h3>
+                <span className="ai-guide-depth">{depth} Dynamic Levels</span>
+              </div>
+              <p className="ai-guide-copy">
+                {groundingLabel ? `Grounded in ${groundingLabel}. ` : ''}
+                The wording describes how the defect was created in the process.
+              </p>
+              <div className="ai-why-chain">
+                {whyEntries.map((entry, index) => (
+                  <div key={`why-${index}`} className="ai-why-step">
+                    <div className="ai-why-num">{index + 1}</div>
+                    <div className="ai-why-fields">
+                      <label>Why Question</label>
+                      <textarea
+                        className="input"
+                        rows={2}
+                        value={entry.question}
+                        onChange={(e) => updateWhy(index, 'question', e.target.value)}
+                      />
+                      <label>Answer</label>
+                      <textarea
+                        className="input"
+                        rows={2}
+                        value={entry.answer}
+                        onChange={(e) => updateWhy(index, 'answer', e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-            <div className="ai-guide-root">
-              <strong>Confirmed root cause</strong>
-              <span>{rootCause || whyEntries[whyEntries.length - 1]?.answer || '—'}</span>
+            <div className="ai-guide-actions-footer ai-guide-actions-footer-review">
+              <button type="button" className="ai-guide-primary" onClick={confirmAnalysis}>
+                Confirm Analysis &amp; Generate Actions
+              </button>
+              <button type="button" className="ai-guide-secondary" disabled={busy || !onGenerate} onClick={handleGenerate}>
+                Regenerate Complete Analysis
+              </button>
             </div>
-            <button type="button" className="ai-guide-primary" onClick={confirmAnalysis}>
-              Confirm edited analysis & generate actions
-            </button>
-            <button type="button" className="ai-guide-secondary" disabled={busy || !onGenerate} onClick={handleGenerate}>
-              Regenerate complete analysis
-            </button>
           </div>
         ) : null}
 
         {step === 3 ? (
-          <div className="ai-guide-panel">
-            <div className="ai-guide-root">
-              <strong>Confirmed root cause</strong>
-              <span>{rootCause || '—'}</span>
-            </div>
-            <div className="ai-guide-actions-grid">
-              <div>
-                <h3>Corrective-action options</h3>
-                <p className="ai-guide-copy">Select an option, then edit it if needed.</p>
-                <div className="ai-option-stack">
-                  {caOptions.map((option, index) => (
-                    <button
-                      key={`ca-${index}`}
-                      type="button"
-                      className={`ai-option-card${selectedCa === index ? ' selected' : ''}`}
-                      onClick={() => {
-                        setSelectedCa(index);
-                        setFinalCa(option);
-                      }}
-                    >
-                      {option}
-                    </button>
-                  ))}
+          <div className="ai-guide-panel ai-guide-panel-actions ai-guide-panel-sticky">
+            <div className="ai-guide-panel-scroll ai-guide-options-scroll">
+              <div className="ai-guide-actions-grid ai-guide-options-grid">
+                <div className="ai-action-col">
+                  <h3>Corrective Action Options</h3>
+                  <p className="ai-guide-copy">Select an option, then edit it if needed.</p>
+                  <div className="ai-option-stack">
+                    {caOptions.map((option, index) => (
+                      <button
+                        key={`ca-${index}`}
+                        type="button"
+                        className={`ai-option-card${selectedCa === index ? ' selected' : ''}`}
+                        onClick={() => {
+                          setSelectedCa(index);
+                          setFinalCa(option);
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <label>Final corrective action</label>
-                <textarea className="input" rows={3} value={finalCa} onChange={(e) => setFinalCa(e.target.value)} placeholder="—" />
-              </div>
-              <div>
-                <h3>Preventive-action options</h3>
-                <p className="ai-guide-copy">Generated from the confirmed root cause.</p>
-                <div className="ai-option-stack">
-                  {paOptions.map((option, index) => (
-                    <button
-                      key={`pa-${index}`}
-                      type="button"
-                      className={`ai-option-card${selectedPa === index ? ' selected' : ''}`}
-                      onClick={() => {
-                        setSelectedPa(index);
-                        setFinalPa(option);
-                      }}
-                    >
-                      {option}
-                    </button>
-                  ))}
+                <div className="ai-action-col">
+                  <h3>Preventive Action Options</h3>
+                  <p className="ai-guide-copy">Generated from the confirmed root cause.</p>
+                  <div className="ai-option-stack">
+                    {paOptions.map((option, index) => (
+                      <button
+                        key={`pa-${index}`}
+                        type="button"
+                        className={`ai-option-card${selectedPa === index ? ' selected' : ''}`}
+                        onClick={() => {
+                          setSelectedPa(index);
+                          setFinalPa(option);
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <label>Final preventive action</label>
-                <textarea className="input" rows={3} value={finalPa} onChange={(e) => setFinalPa(e.target.value)} placeholder="—" />
               </div>
             </div>
-            <button type="button" className="ai-guide-primary" disabled={!onApplyToForm} onClick={saveToForm}>
-              Save Resolution Draft
-            </button>
-            <button type="button" className="ai-guide-secondary" onClick={() => setStep(2)}>
-              Edit Why-Why Analysis
-            </button>
+            <div className="ai-guide-finals-row">
+              <div className="ai-action-final">
+                <h3>Final Corrective Action</h3>
+                <textarea className="input ai-action-final-input" rows={3} value={finalCa} onChange={(e) => setFinalCa(e.target.value)} placeholder="—" />
+              </div>
+              <div className="ai-action-final">
+                <h3>Final Preventive Action</h3>
+                <textarea className="input ai-action-final-input" rows={3} value={finalPa} onChange={(e) => setFinalPa(e.target.value)} placeholder="—" />
+              </div>
+            </div>
+            <div className="ai-guide-actions-footer">
+              <button type="button" className="ai-guide-primary" disabled={!onApplyToForm} onClick={saveToForm}>
+                Save Resolution Draft
+              </button>
+              <button type="button" className="ai-guide-secondary" onClick={() => setStep(2)}>
+                Edit Why-Why Analysis
+              </button>
+            </div>
           </div>
         ) : null}
       </div>

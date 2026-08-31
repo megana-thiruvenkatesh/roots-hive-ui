@@ -4,7 +4,7 @@ import { api } from '../../api/client';
 import { defectOptions } from '../../lib/aiEngineStub';
 import { useAppAlerts } from '../../context/AppAlertsContext.jsx';
 import HistoricResultCard from '../../components/HistoricResultCard.jsx';
-import HistoricRecordsFindBar, { useHistoricRecordsFilter } from '../../components/HistoricRecordsFindBar.jsx';
+import HistoricRecordsFindBar, { useHistoricRecordsFilter, resolveResultsLimit } from '../../components/HistoricRecordsFindBar.jsx';
 import AiGuidedSolution from '../../components/AiGuidedSolution.jsx';
 import FieldSourcePicker from '../../components/FieldSourcePicker.jsx';
 import { COMPLAINT_TYPES, COMPLAINT_SEVERITIES } from '../../lib/complaintFormOptions.js';
@@ -82,11 +82,11 @@ function PaneChevron({ collapsed, side = 'end' }) {
 }
 
 function buildPaneGrid(collapsed, focus) {
-  // Default: sides a bit wider than strict 25/50/25
-  const weights = { details: 1.15, historic: 1.8, ai: 1.15 };
-  if (focus === 'details') Object.assign(weights, { details: 1.4, historic: 1.7, ai: 1 });
-  if (focus === 'historic') Object.assign(weights, { details: 1, historic: 2.1, ai: 1 });
-  if (focus === 'ai') Object.assign(weights, { details: 1, historic: 1.7, ai: 1.4 });
+  // Default: Complaint Details narrow; Historic + AI equal width
+  const weights = { details: 1, historic: 1.5, ai: 1.5 };
+  if (focus === 'details') Object.assign(weights, { details: 1.45, historic: 1.35, ai: 1.35 });
+  if (focus === 'historic') Object.assign(weights, { details: 0.85, historic: 2.3, ai: 0.85 });
+  if (focus === 'ai') Object.assign(weights, { details: 0.85, historic: 0.85, ai: 2.3 });
   return PANE_KEYS.map((key) =>
     collapsed[key] ? '44px' : `minmax(160px, ${weights[key]}fr)`
   ).join(' ');
@@ -116,12 +116,6 @@ function NcFlowTrack({ step, onSelect }) {
       })}
     </ol>
   );
-}
-
-function clampResultsToShow(value) {
-  const n = Number(value);
-  if (!Number.isFinite(n) || n < 1) return 3;
-  return Math.min(20, Math.floor(n));
 }
 
 function validateDetails(form) {
@@ -171,7 +165,6 @@ export default function NewComplaint() {
   const [step, setStep] = useState(1);
   const [flowDir, setFlowDir] = useState('forward');
   const [draftId, setDraftId] = useState(null);
-  const [toastMsg, setToastMsg] = useState(null); // { tone, text }
   const [fieldSources, setFieldSources] = useState({});
   const [linkedHistoric, setLinkedHistoric] = useState({});
   const [rejectionFeedback, setRejectionFeedback] = useState('');
@@ -190,7 +183,7 @@ export default function NewComplaint() {
     desc: '',
     lotQty: '',
     defectQty: '',
-    resultsToShow: 3,
+    resultsToShow: '',
     rootCause: '',
     whyWhyText: '',
     correctiveAction: '',
@@ -221,8 +214,11 @@ export default function NewComplaint() {
     });
   }, [canViewDetails, canViewHistoric, canViewAi]);
   const historicFilter = useHistoricRecordsFilter(matches);
-  const resultsToShow = clampResultsToShow(form.resultsToShow);
-  const shownHistoric = historicFilter.shownMatches.slice(0, resultsToShow);
+  const resultsLimit = resolveResultsLimit(form.resultsToShow);
+  const shownHistoric =
+    resultsLimit == null
+      ? historicFilter.shownMatches
+      : historicFilter.shownMatches.slice(0, resultsLimit);
 
   function togglePane(key) {
     setCollapsedPanes((prev) => {
@@ -302,7 +298,7 @@ export default function NewComplaint() {
           desc: c.desc || '',
           lotQty: c.lotQty ?? '',
           defectQty: c.defectQty ?? '',
-          resultsToShow: clampResultsToShow(wizard.resultsToShow ?? 3),
+          resultsToShow: wizard.resultsToShow ?? '',
           rootCause: c.rootCause || '',
           whyWhyText: Array.isArray(c.whyWhy) ? c.whyWhy.join('\n') : '',
           correctiveAction: c.correctiveAction || '',
@@ -493,7 +489,7 @@ export default function NewComplaint() {
       whyWhy: whyWhyToArray(form.whyWhyText),
       wizardData: {
         step,
-        resultsToShow: clampResultsToShow(form.resultsToShow),
+        resultsToShow: form.resultsToShow === '' ? '' : resolveResultsLimit(form.resultsToShow),
         fieldSources,
         historicRecords: Object.values(linkedHistoric),
       },
@@ -597,26 +593,23 @@ export default function NewComplaint() {
     }
     setSaving(true);
     setError('');
-    setToastMsg(null);
     try {
       const draft = await api.post('/complaints/draft', buildPayload({ saveLabel: resendMode ? 'Updated before re-send' : 'Draft before approval' }));
       setDraftId(draft.complaint.id);
       await api.post(`/complaints/${draft.complaint.id}/send-approval`);
-      setToastMsg({
-        tone: 'success',
-        text: resendMode
+      pushToast(
+        resendMode
           ? 'Updated & re-sent to Admin for approval'
           : 'Approval sent to Admin — after approval, Submit to register',
-      });
-      pushToast(resendMode ? 'Re-sent to Admin' : 'Approval sent to Admin', 'success');
+        'success',
+        5200
+      );
       await refreshUnread();
       setApprovalSent(true);
       goToStep(4, 'forward');
-      window.setTimeout(() => setToastMsg(null), 4500);
     } catch (err) {
       const message = err.message || 'Failed to send approval';
       setError(message);
-      setToastMsg({ tone: 'error', text: message });
       pushToast(message, 'error');
     } finally {
       setSaving(false);
@@ -652,12 +645,6 @@ export default function NewComplaint() {
           onSelect={step < 4 && !approvalSent ? (n) => goToStep(n, n < step ? 'back' : 'forward') : undefined}
         />
       </div>
-
-      {toastMsg ? (
-        <div className={`nc-inline-toast ${toastMsg.tone}`}>
-          {toastMsg.text}
-        </div>
-      ) : null}
 
       {resendMode && rejectionFeedback ? (
         <div className="notif-feedback" style={{ marginBottom: 12 }}>
@@ -778,7 +765,7 @@ export default function NewComplaint() {
                       </div>
                     )}
 
-                    <div className="form-grid-3 nc-form-fields">
+                    <div className="form-grid-2 nc-form-fields">
                       <div className="field">
                         <label>Lot Quantity</label>
                         <input className="input" type="number" min="0" value={form.lotQty} onChange={(e) => upd('lotQty', e.target.value)} />
@@ -786,18 +773,6 @@ export default function NewComplaint() {
                       <div className="field">
                         <label>Defect Quantity</label>
                         <input className="input" type="number" min="0" value={form.defectQty} onChange={(e) => upd('defectQty', e.target.value)} />
-                      </div>
-                      <div className="field nc-results-field">
-                        <label>Results to show</label>
-                        <input
-                          className="input"
-                          type="number"
-                          min="1"
-                          max="20"
-                          value={form.resultsToShow}
-                          title={`Will display ${clampResultsToShow(form.resultsToShow)} of ${matches.length || 0} matched record${matches.length === 1 ? '' : 's'}`}
-                          onChange={(e) => upd('resultsToShow', e.target.value)}
-                        />
                       </div>
                     </div>
                   </>
@@ -978,12 +953,18 @@ export default function NewComplaint() {
                     : `No close matches in the ${form.type} data source yet.`}
               </p>
             ) : (
-              <>
-                <HistoricRecordsFindBar filter={{ ...historicFilter, shownMatches: shownHistoric }} totalCount={matches.length} />
+              <div className="hist-pane-body">
+                <HistoricRecordsFindBar
+                  filter={{ ...historicFilter, shownMatches: shownHistoric }}
+                  totalCount={matches.length}
+                  filteredCount={historicFilter.filteredMatches.length}
+                  resultsToShow={form.resultsToShow}
+                  onResultsToShowChange={(value) => upd('resultsToShow', value)}
+                />
                 {!shownHistoric.length ? (
-                  <div className="empty-panel" style={{ padding: 18 }}>
+                  <div className="empty-panel hist-pane-empty" style={{ padding: 18 }}>
                     <h3 style={{ marginTop: 0 }}>No matches with filters</h3>
-                    <p className="muted" style={{ margin: 0 }}>Try reducing the similarity threshold or clearing the find bar.</p>
+                    <p className="muted" style={{ margin: 0 }}>Try lowering the similarity score or tap reset to clear filters.</p>
                   </div>
                 ) : (
                   <div className="hist-stack">
@@ -1000,7 +981,7 @@ export default function NewComplaint() {
                     ))}
                   </div>
                 )}
-              </>
+              </div>
             )}
           </div>
             </>
@@ -1050,6 +1031,7 @@ export default function NewComplaint() {
               busy={aiBusy}
               onGenerate={canGenerateAi ? generateGuidedAssist : undefined}
               onApplyToForm={canApplyAi ? applyGuidedToForm : undefined}
+              onNotify={pushToast}
             />
           </div>
             </>

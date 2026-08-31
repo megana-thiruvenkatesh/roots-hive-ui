@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../api/client';
-import { useAuth } from '../../context/AuthContext.jsx';
-import { canAccessPath } from '../../lib/roles.js';
 
 export default function ComplaintList() {
-  const { user } = useAuth();
-  const canCreate = canAccessPath(user?.roleKey, '/complaints/new');
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
@@ -45,13 +41,6 @@ export default function ComplaintList() {
         <div>
           <h1>All Complaints ({filtered.length})</h1>
           <p>Search and filter live complaint records.</p>
-        </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          {canCreate ? (
-            <Link to="/complaints/new" className="btn">
-              + New
-            </Link>
-          ) : null}
         </div>
       </div>
 

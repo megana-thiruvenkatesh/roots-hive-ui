@@ -3,7 +3,7 @@ import { api } from '../api/client';
 import { useAuth } from './AuthContext.jsx';
 
 const AppAlertsContext = createContext(null);
-const MAX_TOASTS = 4;
+const MAX_TOASTS = 3;
 
 export function AppAlertsProvider({ children }) {
   const { user } = useAuth();

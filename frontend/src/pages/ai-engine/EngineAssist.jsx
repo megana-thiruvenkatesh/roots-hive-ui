@@ -254,14 +254,18 @@ export function EngineHistoricPanel({
             </p>
           </div>
         ) : (
-          <>
-            <HistoricRecordsFindBar filter={filter} totalCount={matches.length} />
+          <div className="hist-pane-body">
+            <HistoricRecordsFindBar
+              filter={filter}
+              totalCount={matches.length}
+              filteredCount={filter.filteredMatches.length}
+            />
 
             {!filter.shownMatches.length ? (
-              <div className="empty-panel" style={{ padding: 18 }}>
+              <div className="empty-panel hist-pane-empty" style={{ padding: 18 }}>
                 <h3 style={{ marginTop: 0 }}>No matches with filters</h3>
                 <p className="muted" style={{ margin: 0 }}>
-                  Try reducing the similarity threshold or clearing the find bar.
+                  Try lowering the similarity score or tap reset to clear filters.
                 </p>
               </div>
             ) : (
@@ -281,7 +285,7 @@ export function EngineHistoricPanel({
                 ))}
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </section>

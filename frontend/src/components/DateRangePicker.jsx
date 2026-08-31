@@ -199,7 +199,7 @@ export default function DateRangePicker({ fromDate, toDate, onApply }) {
 
       {open
         ? createPortal(
-            <div className="drp-pop" style={popStyle} ref={popRef}>
+            <div className="drp-pop drp-pop-stack" style={popStyle} ref={popRef}>
               <div className="drp-cals">
                 <div>
                   <div className="drp-field-row">

@@ -52,3 +52,4 @@ coverage/
 *.p12
 tmp/
 temp/
+render.local.yaml

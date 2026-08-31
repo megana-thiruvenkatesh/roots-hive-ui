@@ -117,9 +117,7 @@ const NAV = [
     to: '/config/overview',
     children: [
       { to: '/config/overview', label: 'Overview', roles: [ROLES.ADMIN] },
-      { to: '/config/modules', label: 'Modules', roles: [ROLES.ADMIN] },
       { to: '/config/policy', label: 'Policy Config', roles: [ROLES.ADMIN] },
-      { to: '/config/complaint-masters', label: 'Complaint Masters', roles: [ROLES.ADMIN] },
     ],
   },
   {
